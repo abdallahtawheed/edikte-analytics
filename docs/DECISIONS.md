@@ -28,21 +28,25 @@ require near-real-time detection.
 
 **Context:** Existing hands-on experience (RDS, EC2) is on AWS, from a prior personal 
 project. GCP was considered as an alternative for this project specifically to build 
-exposure to a second major cloud provider, since job postings targeted for this 
-project's relevance showed Dataplex appearing repeatedly, while DataHub - the 
-AWS-adjacent equivalent explored earlier - did not.
+exposure to a second major cloud provider. Job postings targeted for this project's 
+relevance showed Dataplex appearing repeatedly, while DataHub did not.
 
 **Decision:** Use GCP (Cloud SQL, Cloud Storage, BigQuery, Dataplex) for this project.
 
 **Alternatives considered:** Staying on AWS, leveraging existing RDS/EC2 experience 
-directly. Azure was also considered and rejected — not because it's a worse fit, but 
-to avoid spreading cloud exposure across three providers with no project depth in any 
-of them. Azure is reserved for a possible future project instead.
+directly, and running DataHub for governance there instead. DataHub is not 
+AWS specific and could technically run on GCP as well, but Dataplex was chosen because 
+it is GCP native (tighter integration with BigQuery and Cloud SQL, no separate service 
+to host) and it is the tool that actually appeared in the target job postings. Azure 
+was also considered and rejected, not because it is a worse fit, but to avoid spreading 
+cloud exposure across three providers with no project depth in any of them. Azure is 
+reserved for a possible future project instead.
 
 **Consequences:** Existing AWS experience (RDS, EC2 from the labor market project) 
-doesn't get reinforced or deepened here — this is a deliberate tradeoff, not an 
+does not get reinforced or deepened here. This is a deliberate tradeoff, not an 
 oversight, in favor of broadening rather than deepening cloud exposure at this stage. 
-Some relearning of equivalent concepts under different naming/conventions is required.
+Some relearning of equivalent concepts under different naming and conventions is 
+required.
 
 ## ADR-003: No Spark/Dask/Hadoop at current data volume
 
@@ -52,20 +56,20 @@ Some relearning of equivalent concepts under different naming/conventions is req
 **Context:** Spark, Dask, and Hadoop are frameworks for distributed processing across 
 multiple machines, built for data volumes that don't fit or don't process efficiently 
 on a single node. A search-results sample from Ediktsdatei showed ~88 new/updated 
-listings per week, nationally, across all property categories — several orders of 
+listings per week, nationally, across all property categories, several orders of 
 magnitude below the volume these tools are designed for.
 
 **Decision:** Do not use Spark, Dask, or Hadoop. Process data with plain Python/Pandas 
 and Postgres/BigQuery SQL.
 
 **Alternatives considered:** Generating synthetic data to artificially inflate volume 
-and justify using one of these tools. Rejected — this would mean building the project 
+and justify using one of these tools. Rejected, this would mean building the project 
 around a fabricated constraint instead of the real one, which defeats the purpose of 
 having a defensible architecture at all.
 
 **Consequences:** If the project were later expanded significantly in scope (e.g. 
 beyond Austria, or to a much higher-frequency data source), this decision would need 
-to be revisited. At current scale, revisiting it would itself be a bad sign — a 
+to be revisited. At current scale, revisiting it would itself be a bad sign, a 
 correct decision doesn't need reversing just because more tools exist.
 
 ## ADR-004: Postgres for transactional layer, BigQuery for analytical layer
@@ -80,7 +84,7 @@ queries, so using it alone for everything was a real option, not a strawman.
 event log and state machine, and BigQuery as a separate analytical layer fed by dbt 
 transformations from Postgres.
 
-**Alternatives considered:** BigQuery for both OLTP and OLAP. Rejected — BigQuery is 
+**Alternatives considered:** BigQuery for both OLTP and OLAP. Rejected - BigQuery is 
 optimized for large scan-heavy analytical queries, not frequent small row-level writes 
 and updates, which the event log and state machine require continuously as listings 
 change. Splitting the two also means ingestion and analytics fail independently: a bug 
@@ -88,5 +92,5 @@ in the scrape/write path doesn't take down the analytical layer, and a broken db
 doesn't block new data from being captured.
 
 **Consequences:** Requires a sync step (dbt) moving data from Postgres into BigQuery on 
-a schedule — an additional moving part, and a place things can break that wouldn't 
+a schedule - an additional moving part, and a place things can break that wouldn't 
 exist in a single-database design. Accepted as worth it for the isolation benefit above.
