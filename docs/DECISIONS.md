@@ -94,3 +94,27 @@ doesn't block new data from being captured.
 **Consequences:** Requires a sync step (dbt) moving data from Postgres into BigQuery on 
 a schedule - an additional moving part, and a place things can break that wouldn't 
 exist in a single-database design. Accepted as worth it for the isolation benefit above.
+
+## ADR-005: Application Default Credentials for local Terraform auth, not a service account key
+
+**Date:** 2026-08-08
+**Status:** Accepted
+
+**Context:** Terraform needs GCP credentials to provision resources. Two standard 
+options exist: Application Default Credentials (ADC, reusing the developer's own 
+gcloud login) or a dedicated service account with a downloaded JSON key file.
+
+**Decision:** Use ADC (`gcloud auth application-default login`) for local development.
+
+**Alternatives considered:** A dedicated service account with a JSON key, originally 
+planned. Reconsidered because a downloaded key file is a credential sitting on disk 
+that must never be committed to git, and leaked service account keys are a common, 
+real way personal cloud projects get compromised. For a solo developer running 
+Terraform locally, ADC provides the same functionality with meaningfully less risk 
+surface, since there is no key file to leak in the first place.
+
+**Consequences:** This project's current IAM setup is not representative of how a 
+team or production environment would authenticate automated systems, since a 
+scheduled Airflow pipeline running unattended (not on a developer's own machine) 
+would need a scoped service account regardless. That is a deliberate future addition 
+once Airflow moves off local execution, not an oversight in the current setup.

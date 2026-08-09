@@ -1,0 +1,166 @@
+import re
+from datetime import datetime
+from sqlalchemy import create_engine, text
+from google.cloud.sql.connector import Connector
+import os
+from dotenv import load_dotenv
+from parser.parse import parse_de_number
+
+load_dotenv()
+
+DB_PASSWORD = os.environ["DB_PASSWORD"]
+INSTANCE_CONNECTION_NAME = "edikte-analytics-2026:europe-west3:edikte-analytics-db"
+DB_USER = "edikte_app"
+DB_NAME = "edikte_analytics"
+
+connector = Connector()
+
+
+def get_connection():
+    return connector.connect(
+        INSTANCE_CONNECTION_NAME,
+        "pg8000",
+        user=DB_USER,
+        password=DB_PASSWORD,
+        db=DB_NAME,
+    )
+
+
+engine = create_engine("postgresql+pg8000://", creator=get_connection)
+
+
+def parse_de_date(value: str) -> str | None:
+    """Convert 'DD.MM.YYYY' to ISO format, or None if unparseable."""
+    if not value:
+        return None
+    try:
+        return datetime.strptime(value.strip(), "%d.%m.%Y").date().isoformat()
+    except ValueError:
+        return None
+
+def get_latest_content_hash(aktenzeichen: str) -> str | None:
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("""
+                SELECT content_hash FROM listing_snapshots
+                WHERE aktenzeichen = :aktenzeichen
+                ORDER BY scraped_at DESC
+                LIMIT 1
+            """),
+            {"aktenzeichen": aktenzeichen},
+        )
+        row = result.fetchone()
+        return row[0] if row else None
+
+def split_plz_ort(value: str) -> tuple[str | None, str | None]:
+    """'8020 Graz' -> ('8020', 'Graz')."""
+    if not value:
+        return None, None
+    match = re.match(r"(\d{4})\s+(.+)", value.strip())
+    if match:
+        return match.group(1), match.group(2)
+    return None, value.strip()
+
+
+def insert_snapshot(parsed: dict) -> tuple[int, str]:
+    """Insert one row into listing_snapshots. Returns (snapshot_id, aktenzeichen)."""
+    fields = parsed["raw_fields"]
+
+    aktenzeichen = fields.pop("Aktenzeichen", None)
+    dienststelle = fields.pop("Dienststelle", None)
+    aktenzeichen_wegen = fields.pop("wegen", None)
+    grundbuch = fields.pop("Grundbuch", None)
+    kategorie = fields.pop("Kategorie(n)", None)
+    bekannt_gemacht_am = parse_de_date(fields.pop("Bekannt gemacht am", None))
+    plz, ort = split_plz_ort(fields.pop("PLZ/Ort", ""))
+
+    if not aktenzeichen:
+        raise ValueError("No Aktenzeichen found, refusing to insert an untrackable row")
+
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("""
+                INSERT INTO listing_snapshots (
+                    aktenzeichen, content_hash, dienststelle, aktenzeichen_wegen,
+                    grundbuch, ort, plz, kategorie, bekannt_gemacht_am,
+                    status_title, berichtigte_fassung, extra
+                ) VALUES (
+                    :aktenzeichen, :content_hash, :dienststelle, :aktenzeichen_wegen,
+                    :grundbuch, :ort, :plz, :kategorie, :bekannt_gemacht_am,
+                    :status_title, :berichtigte_fassung, :extra
+                )
+                RETURNING snapshot_id
+            """),
+            {
+                "aktenzeichen": aktenzeichen,
+                "content_hash": parsed["content_hash"],
+                "dienststelle": dienststelle,
+                "aktenzeichen_wegen": aktenzeichen_wegen,
+                "grundbuch": grundbuch,
+                "ort": ort,
+                "plz": plz,
+                "kategorie": kategorie,
+                "bekannt_gemacht_am": bekannt_gemacht_am,
+                "status_title": parsed["status_title"],
+                "berichtigte_fassung": parsed.get("berichtigte_fassung", False),
+                "extra": __import__("json").dumps(fields),
+            },
+        )
+        snapshot_id = result.scalar()
+        conn.commit()
+
+    for doc in parsed["documents"]:
+        with engine.connect() as conn:
+            conn.execute(
+                text("""
+                    INSERT INTO listing_documents (aktenzeichen, doc_type, storage_path)
+                    VALUES (:aktenzeichen, :doc_type, :storage_path)
+                """),
+                {"aktenzeichen": aktenzeichen, "doc_type": doc["doc_type"], "storage_path": doc["url"]},
+            )
+            conn.commit()
+
+    return snapshot_id, aktenzeichen
+
+
+def insert_parcel(aktenzeichen: str, fields: dict) -> int:
+    ez = fields.get("EZ")
+    grundstuecksnr_raw = fields.get("Grundstücksnr.") or fields.get("Grundstücksnr")
+    grundstuecksnr = (
+        [p.strip() for p in grundstuecksnr_raw.split(",")]
+        if grundstuecksnr_raw else None
+    )
+    blnr = fields.get("BLNr")
+    vadium = parse_de_number(fields.get("Vadium"))
+    objektgroesse = parse_de_number(fields.get("Objektgröße"))
+    grundstuecksgroesse = parse_de_number(fields.get("Grundstücksgröße"))
+
+    if not ez:
+        return None  # some listing types (Zuschlag, Meistbotsverteilung) may lack EZ entirely; skip cleanly
+
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("""
+                INSERT INTO listing_parcels (
+                    aktenzeichen, ez, grundstuecksnr, blnr,
+                    vadium, objektgroesse_m2, grundstuecksgroesse_m2
+                ) VALUES (
+                    :aktenzeichen, :ez, :grundstuecksnr, :blnr,
+                    :vadium, :objektgroesse, :grundstuecksgroesse
+                )
+                RETURNING parcel_id
+            """),
+            {
+                "aktenzeichen": aktenzeichen,
+                "ez": ez,
+                "grundstuecksnr": grundstuecksnr,
+                "blnr": blnr,
+                "vadium": vadium,
+                "objektgroesse": objektgroesse,
+                "grundstuecksgroesse": grundstuecksgroesse,
+            },
+        )
+        parcel_id = result.scalar()
+        conn.commit()
+
+    return parcel_id
