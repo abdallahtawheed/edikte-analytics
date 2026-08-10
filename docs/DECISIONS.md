@@ -118,3 +118,85 @@ team or production environment would authenticate automated systems, since a
 scheduled Airflow pipeline running unattended (not on a developer's own machine) 
 would need a scoped service account regardless. That is a deliberate future addition 
 once Airflow moves off local execution, not an oversight in the current setup.
+
+## ADR-006: Prose-based extraction for Zuschlag sale prices
+
+**Date:** 2026-08-10
+**Status:** Accepted
+
+**Context:** The generic div.row label:value parser correctly handles most fields, 
+but Zuschlag-type listings (ohne/mit/nach Uberbot) embed the actual sale price 
+(Meistbot) in a prose sentence rather than a structured field, e.g. "...um das 
+Meistbot von 314.000,00 EUR zugeschlagen." This was initially missed entirely, 
+confirmed by testing against real scraped data rather than assumed correct.
+
+**Decision:** Added a secondary regex-based extraction pass over the full page 
+text, run after the main div.row loop, specifically targeting this sentence 
+pattern. Captured value is normalized into the same raw_fields dict as other 
+price fields so downstream parsing (parse_de_number) handles it identically.
+
+**Alternatives considered:** None seriously, this is the only place the value 
+exists on the page. The real alternative considered was whether to silently 
+accept the gap versus fix it, rejected since Zuschlag ohne Uberbot listings are 
+the one reliable historical price signal this entire project is built around.
+
+**Consequences:** Confirmed via real batch run: 173 listings picked up newly 
+extracted Meistbot values on rerun, correctly detected as changed content via 
+the hash mechanism, no manual cleanup needed.
+
+## ADR-007: BLNr as per-object identity, source_url as change-detection key
+
+**Date:** 2026-08-10
+**Status:** Accepted
+
+**Context:** Discovered that a single Aktenzeichen can represent many distinct 
+purchasable objects (e.g. an apartment plus its parking spaces, or multiple 
+storage/motorbike spaces in one building), each sharing one EZ but each carrying 
+its own BLNr, its own detail page, and, confirmed via real Versteigerung listings, 
+its own independently-set Schätzwert/Vadium/Geringstes Gebot. Original change-detection 
+logic keyed on Aktenzeichen alone, causing every object under a multi-object case to 
+be treated as a change of every other object, producing runaway duplicate inserts.
+
+**Decision:** Change-detection now keys on source_url, guaranteed unique per real 
+page. listing_parcels gains a snapshot_id foreign key, linking each parcel row to 
+the specific object/page it was extracted from, rather than only the shared 
+Aktenzeichen.
+
+**Alternatives considered:** Keying on (Aktenzeichen, BLNr) instead of source_url. 
+Rejected as primary key for change detection since BLNr's raw text format varies 
+across listings (plain numbers, ranges, fractional-share notation), making it 
+less reliable than the site's own guaranteed-unique URL for this specific purpose. 
+BLNr remains a first-class, meaningful field on listing_parcels.
+
+**Consequences:** Confirms the project's real unit of analysis, for pricing, 
+mapping, and eventual bidding research, is the individual object (source_url/BLNr 
+level), not the Aktenzeichen case. This should inform how Streamlit later presents 
+listings: grouped by case, but browsable and analyzable at the object level.
+
+## ADR-008: Accept ~96% geocoding coverage, defer further address-cleaning refinement
+
+**Date:** 2026-08-10
+**Status:** Accepted
+
+**Context:** After fixing multi-street address parsing (splitting on comma/slash/
+"und"), 407 of 425 real objects geocoded successfully via Nominatim. The remaining 
+17 failures break down into: genuinely missing addresses ("keine"), informal rural 
+location descriptions ("Bergwerk 1", "neben Kleindorf I/5"), zone/area names rather 
+than street addresses ("Gewerbezone Zell bei Ebenthal"), addresses in villages 
+likely below Nominatim's data granularity, and a small number where the cleaning 
+regex may still be incomplete (e.g. "u." as an abbreviation for "und" not handled).
+
+**Decision:** Accept the current ~96% geocoding coverage as sufficient for now. Do 
+not invest further time refining address-cleaning edge cases at this stage.
+
+**Alternatives considered:** Further regex refinement (handling "u." abbreviation, 
+adjusting slash-splitting to avoid breaking "Stg. 2/7"-style unit references), or a 
+paid/more capable geocoding service. Rejected for now: most remaining failures are 
+genuinely unresolvable from the source data itself (no real address exists), not a 
+tooling gap, so the ceiling on further improvement from code changes alone is low.
+
+**Consequences:** A small number of real objects, mostly undeveloped land, informal 
+rural descriptions, and zone-level addresses, will not appear on map views. This is 
+an honest data limitation to note in the README, not a hidden gap. Worth revisiting 
+if a future systematic review shows the failure count growing disproportionately as 
+more listings are scraped, or if map coverage becomes a more central feature.

@@ -38,16 +38,16 @@ def parse_de_date(value: str) -> str | None:
     except ValueError:
         return None
 
-def get_latest_content_hash(aktenzeichen: str) -> str | None:
+def get_latest_content_hash(source_url: str) -> str | None:
     with engine.connect() as conn:
         result = conn.execute(
             text("""
                 SELECT content_hash FROM listing_snapshots
-                WHERE aktenzeichen = :aktenzeichen
+                WHERE source_url = :source_url
                 ORDER BY scraped_at DESC
                 LIMIT 1
             """),
-            {"aktenzeichen": aktenzeichen},
+            {"source_url": source_url},
         )
         row = result.fetchone()
         return row[0] if row else None
@@ -81,11 +81,11 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
         result = conn.execute(
             text("""
                 INSERT INTO listing_snapshots (
-                    aktenzeichen, content_hash, dienststelle, aktenzeichen_wegen,
+                    aktenzeichen, content_hash, source_url, dienststelle, aktenzeichen_wegen,
                     grundbuch, ort, plz, kategorie, bekannt_gemacht_am,
                     status_title, berichtigte_fassung, extra
                 ) VALUES (
-                    :aktenzeichen, :content_hash, :dienststelle, :aktenzeichen_wegen,
+                    :aktenzeichen, :content_hash, :source_url, :dienststelle, :aktenzeichen_wegen,
                     :grundbuch, :ort, :plz, :kategorie, :bekannt_gemacht_am,
                     :status_title, :berichtigte_fassung, :extra
                 )
@@ -94,6 +94,7 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
             {
                 "aktenzeichen": aktenzeichen,
                 "content_hash": parsed["content_hash"],
+                "source_url": parsed["source_url"],
                 "dienststelle": dienststelle,
                 "aktenzeichen_wegen": aktenzeichen_wegen,
                 "grundbuch": grundbuch,
@@ -121,9 +122,8 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
             conn.commit()
 
     return snapshot_id, aktenzeichen
-
-
-def insert_parcel(aktenzeichen: str, fields: dict) -> int:
+    
+def insert_parcel(aktenzeichen: str, snapshot_id: int, fields: dict) -> int:
     ez = fields.get("EZ")
     grundstuecksnr_raw = fields.get("Grundstücksnr.") or fields.get("Grundstücksnr")
     grundstuecksnr = (
@@ -136,22 +136,23 @@ def insert_parcel(aktenzeichen: str, fields: dict) -> int:
     grundstuecksgroesse = parse_de_number(fields.get("Grundstücksgröße"))
 
     if not ez:
-        return None  # some listing types (Zuschlag, Meistbotsverteilung) may lack EZ entirely; skip cleanly
+        return None
 
     with engine.connect() as conn:
         result = conn.execute(
             text("""
                 INSERT INTO listing_parcels (
-                    aktenzeichen, ez, grundstuecksnr, blnr,
+                    aktenzeichen, snapshot_id, ez, grundstuecksnr, blnr,
                     vadium, objektgroesse_m2, grundstuecksgroesse_m2
                 ) VALUES (
-                    :aktenzeichen, :ez, :grundstuecksnr, :blnr,
+                    :aktenzeichen, :snapshot_id, :ez, :grundstuecksnr, :blnr,
                     :vadium, :objektgroesse, :grundstuecksgroesse
                 )
                 RETURNING parcel_id
             """),
             {
                 "aktenzeichen": aktenzeichen,
+                "snapshot_id": snapshot_id,
                 "ez": ez,
                 "grundstuecksnr": grundstuecksnr,
                 "blnr": blnr,

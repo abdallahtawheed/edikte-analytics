@@ -1,10 +1,11 @@
-from unittest import result
 
 from bs4 import BeautifulSoup
 import hashlib
 from urllib.parse import urljoin
 import json
 import re
+
+MEISTBOT_PATTERN = re.compile(r"um das Meistbot von\s*([\d.,]+)\s*EUR\s*zugeschlagen")
 
 BASE_URL = "https://edikte.justiz.gv.at"
 
@@ -43,6 +44,12 @@ def parse_listing(html: str, source_url: str) -> dict:
     if headline_el:
         result["status_title"] = headline_el.get_text(strip=True)
 
+    # Zuschlag-type pages: sale price is in prose, not a div.row field
+    page_text = soup.get_text()
+    meistbot_match = MEISTBOT_PATTERN.search(page_text)
+    if meistbot_match:
+        result["raw_fields"]["Meistbot"] = meistbot_match.group(1) + " EUR"
+
 
     # in parse_listing, after finding headline_el:
     berichtigte_fassung = "Berichtigte Fassung" in soup.get_text()
@@ -70,13 +77,15 @@ def parse_listing(html: str, source_url: str) -> dict:
 
     hashable_content = json.dumps(
     {
+        "source_url": result["source_url"],
         "status_title": result["status_title"],
         "raw_fields": result["raw_fields"],
         "documents": result["documents"],
         "berichtigte_fassung": result["berichtigte_fassung"],
     },
-    sort_keys=True,  # critical: ensures identical data always produces identical string
+    sort_keys=True,
     )
     result["content_hash"] = hashlib.sha256(hashable_content.encode("utf-8")).hexdigest()
 
     return result
+

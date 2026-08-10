@@ -9,6 +9,9 @@ CREATE TABLE listing_snapshots (
     aktenzeichen         TEXT NOT NULL,
     scraped_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
     content_hash         TEXT NOT NULL,
+    source_url            TEXT,      -- the real page this snapshot was scraped from;
+                                     -- the true per-object uniqueness key, since one
+                                     -- aktenzeichen can cover many distinct objects
 
     dienststelle          TEXT,
     aktenzeichen_wegen    TEXT,      -- "Zwangsversteigerung einer Liegenschaft" / "...von Wohnungseigentum"
@@ -23,10 +26,7 @@ CREATE TABLE listing_snapshots (
 
     status_title          TEXT,      -- raw page headline, e.g. "Zuschlag mit Überbot", not yet validated
 
-    latitude              NUMERIC,   -- derived via geocoding, not scraped
-    longitude             NUMERIC,
-
-    raw_html_path         TEXT,      -- pointer to Cloud Storage object
+    raw_html_path         TEXT,      -- pointer to Cloud Storage object (not yet populated)
 
     extra                 JSONB,     -- fields not yet promoted to real columns: Schätzwert,
                                      -- Meistbot, Vadium (non-parcel cases), Betreibende/
@@ -37,6 +37,7 @@ CREATE TABLE listing_snapshots (
 
 CREATE INDEX idx_snapshots_aktenzeichen ON listing_snapshots (aktenzeichen);
 CREATE INDEX idx_snapshots_scraped_at ON listing_snapshots (scraped_at);
+CREATE INDEX idx_snapshots_source_url ON listing_snapshots (source_url);
 CREATE INDEX idx_snapshots_extra ON listing_snapshots USING GIN (extra);
 
 -- ============================================================
@@ -56,14 +57,19 @@ CREATE INDEX idx_status_events_aktenzeichen ON listing_status_events (aktenzeich
 CREATE INDEX idx_status_events_status ON listing_status_events (status);
 
 -- ============================================================
--- Parcels: one row per EZ, the actual purchasable unit
+-- Parcels: one row per object-snapshot (EZ + BLNr identify the
+-- real purchasable unit; snapshot_id ties this row back to the
+-- exact page/scrape it came from)
 -- ============================================================
 CREATE TABLE listing_parcels (
     parcel_id             BIGSERIAL PRIMARY KEY,
     aktenzeichen           TEXT NOT NULL,
+    snapshot_id             BIGINT REFERENCES listing_snapshots(snapshot_id),
     ez                    TEXT NOT NULL,
     grundstuecksnr         TEXT[],    -- e.g. {'2487','2883','2884','5746/14'}
-    blnr                  TEXT,
+    blnr                  TEXT,       -- the real per-object identifier within an EZ,
+                                     -- confirmed via real listings to carry its own
+                                     -- independent valuation (Schätzwert/Vadium/Gebot)
 
     vadium                 NUMERIC,
     objektgroesse_m2        NUMERIC,   -- 0 is valid (e.g. undeveloped land)
@@ -71,6 +77,7 @@ CREATE TABLE listing_parcels (
 );
 
 CREATE INDEX idx_parcels_aktenzeichen ON listing_parcels (aktenzeichen);
+CREATE INDEX idx_parcels_snapshot_id ON listing_parcels (snapshot_id);
 CREATE INDEX idx_parcels_ez ON listing_parcels (ez);
 
 -- ============================================================
@@ -80,7 +87,7 @@ CREATE TABLE listing_documents (
     document_id            BIGSERIAL PRIMARY KEY,
     aktenzeichen            TEXT NOT NULL,
     doc_type                TEXT NOT NULL,  -- Foto / Lageplan / Grundriss / Kurzgutachten / Langgutachten
-    storage_path             TEXT NOT NULL,  -- Cloud Storage object path
+    storage_path             TEXT NOT NULL,  -- full source URL (or Cloud Storage path once mirrored)
     size_kb                  NUMERIC
 );
 
@@ -115,8 +122,27 @@ CREATE TABLE listing_flags (
 CREATE INDEX idx_flags_aktenzeichen ON listing_flags (aktenzeichen);
 CREATE INDEX idx_flags_type ON listing_flags (flag_type);
 
+
 -- ============================================================
--- View: latest known state per listing, joins snapshot + status
+-- Geocoded coordinates, one row per real object (source_url),
+-- deliberately NOT versioned like listing_snapshots: an address's
+-- coordinates don't change when price/status fields change, so
+-- coupling lat/long to the append-only snapshot log caused every
+-- new snapshot to "forget" previously-resolved coordinates.
+-- ============================================================
+CREATE TABLE listing_coordinates (
+    source_url    TEXT PRIMARY KEY,
+    latitude       NUMERIC NOT NULL,
+    longitude      NUMERIC NOT NULL,
+    geocoded_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- ============================================================
+-- View: latest known state per listing (aktenzeichen-level),
+-- joins snapshot + status. Note: for multi-object aktenzeichens,
+-- this collapses to one row per case, not one per object. Use
+-- listing_snapshots + listing_parcels directly for object-level
+-- queries (e.g. mapping every individual parking space/unit).
 -- ============================================================
 CREATE VIEW listings_current AS
 SELECT DISTINCT ON (s.aktenzeichen)

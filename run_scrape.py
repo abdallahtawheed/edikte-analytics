@@ -11,9 +11,7 @@ from scraper.state_machine import insert_status_event
 SINCE_DATE = "01.01.2020"  # effectively "everything available", per our plateau test
 DELAY_SECONDS = 1.0  # be a polite scraper against a government server, not just fast
 
-
 def process_listing(url: str) -> str:
-    """Returns a short status string for logging, never raises."""
     try:
         html = fetch_listing(url)
         data = parse_listing(html, url)
@@ -22,19 +20,19 @@ def process_listing(url: str) -> str:
         if not aktenzeichen_preview:
             return "SKIPPED (no Aktenzeichen found)"
 
-        existing_hash = get_latest_content_hash(aktenzeichen_preview)
+        existing_hash = get_latest_content_hash(data["source_url"])
         if existing_hash == data["content_hash"]:
             return "unchanged"
 
         fields_snapshot = dict(data["raw_fields"])
         snapshot_id, aktenzeichen = insert_snapshot(data)
         insert_status_event(aktenzeichen, data["status_title"])
-        insert_parcel(aktenzeichen, fields_snapshot)
+        insert_parcel(aktenzeichen, snapshot_id, fields_snapshot)
 
         return f"inserted (snapshot_id={snapshot_id}, docs={len(data['documents'])})"
 
     except Exception as e:
-        return f"ERROR: {type(e).__name__}: {e}"
+        return f"ERROR: {type(e).__name__}: {e}"    
 
 
 def main():
