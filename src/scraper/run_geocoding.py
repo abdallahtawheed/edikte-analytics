@@ -7,12 +7,6 @@ from scraper.geocoding import geocode_address
 
 
 def get_ungeocoded_listings() -> list[dict]:
-    """
-    Latest snapshot per real object (source_url) that has no row yet in
-    listing_coordinates. This naturally never re-processes an object once
-    it's been successfully geocoded once, regardless of how many new
-    snapshot rows that object accumulates afterward.
-    """
     with engine.connect() as conn:
         result = conn.execute(
             text("""
@@ -29,7 +23,7 @@ def get_ungeocoded_listings() -> list[dict]:
 
 
 def insert_coordinates(source_url: str, lat: float, lon: float):
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         conn.execute(
             text("""
                 INSERT INTO listing_coordinates (source_url, latitude, longitude)
@@ -41,7 +35,6 @@ def insert_coordinates(source_url: str, lat: float, lon: float):
             """),
             {"source_url": source_url, "lat": lat, "lon": lon},
         )
-        conn.commit()
 
 
 def main():

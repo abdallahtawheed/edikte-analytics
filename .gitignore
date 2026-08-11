@@ -150,6 +150,7 @@ activemq-data/
 *.sage.py
 
 # Environments
+*.env
 .env
 .envrc
 .venv
@@ -224,3 +225,8 @@ __marimo__/
 *.tfstate.backup
 .terraform/
 *.tfvars
+
+#airflow
+
+airflow/.env
+airflow-key.json

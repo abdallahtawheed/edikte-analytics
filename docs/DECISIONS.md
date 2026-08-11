@@ -200,3 +200,42 @@ rural descriptions, and zone-level addresses, will not appear on map views. This
 an honest data limitation to note in the README, not a hidden gap. Worth revisiting 
 if a future systematic review shows the failure count growing disproportionately as 
 more listings are scraped, or if map coverage becomes a more central feature.
+
+## ADR-009: SQLAlchemy version must not be pinned in Airflow's environment
+
+**Date:** 2026-08-11
+**Status:** Accepted
+
+**Context:** Airflow's own internals (flask-appbuilder, apache-airflow-core) depend 
+on SQLAlchemy 1.4.x specifically, and this dependency is not visible from outside 
+Airflow's own package metadata. Initially built the Airflow Docker image's 
+requirements.txt by copying exact versions from the local project's uv.lock, 
+including sqlalchemy==2.0.51 and pandas==3.0.5, matching what the scraper code was 
+developed and tested against locally.
+
+This broke Airflow in two stages. First, installing SQLAlchemy 2.0.51 overwrote 
+Airflow's required 1.4.x version at image build time, breaking flask-appbuilder and 
+causing the airflow-apiserver container to fail its healthcheck entirely. Fixing the 
+version pin resolved that, but surfaced a second, more subtle issue: application 
+code written against SQLAlchemy 2.0's Connection.commit() method failed at runtime 
+inside Airflow's containers, where SQLAlchemy 1.4's Connection object does not 
+expose that method the same way.
+
+**Decision:** Do not pin sqlalchemy or pandas in the Airflow image's 
+requirements.txt; let Airflow's own installed versions stand. Separately, rewrote 
+all database write functions (insert_snapshot, insert_parcel, insert_status_event, 
+insert_coordinates) to use engine.begin() instead of engine.connect() + explicit 
+.commit(), since begin()'s auto-commit-on-success behavior is syntax that works 
+identically across SQLAlchemy 1.4 and 2.0.
+
+**Alternatives considered:** Running Airflow tasks in an isolated virtualenv per 
+task (Airflow supports this via PythonVirtualenvOperator), which would allow 
+pinning any version freely. Rejected for now as unnecessary added complexity at 
+this project's scale; the engine.begin() fix makes the existing code portable 
+without needing environment isolation per task.
+
+**Consequences:** Any future code touching the database must use engine.begin() 
+rather than engine.connect() + .commit(), to remain compatible with both the local 
+development environment (SQLAlchemy 2.0) and Airflow's runtime (SQLAlchemy 1.4). 
+This is now a real constraint on the codebase, not just a one-off fix, worth noting 
+for anyone extending it.

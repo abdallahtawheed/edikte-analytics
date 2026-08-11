@@ -38,6 +38,7 @@ def parse_de_date(value: str) -> str | None:
     except ValueError:
         return None
 
+
 def get_latest_content_hash(source_url: str) -> str | None:
     with engine.connect() as conn:
         result = conn.execute(
@@ -51,6 +52,7 @@ def get_latest_content_hash(source_url: str) -> str | None:
         )
         row = result.fetchone()
         return row[0] if row else None
+
 
 def split_plz_ort(value: str) -> tuple[str | None, str | None]:
     """'8020 Graz' -> ('8020', 'Graz')."""
@@ -80,7 +82,7 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
     if not aktenzeichen:
         raise ValueError("No Aktenzeichen found, refusing to insert an untrackable row")
 
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         result = conn.execute(
             text("""
                 INSERT INTO listing_snapshots (
@@ -114,10 +116,9 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
             },
         )
         snapshot_id = result.scalar()
-        conn.commit()
 
     for doc in parsed["documents"]:
-        with engine.connect() as conn:
+        with engine.begin() as conn:
             conn.execute(
                 text("""
                     INSERT INTO listing_documents (aktenzeichen, doc_type, storage_path)
@@ -125,10 +126,10 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
                 """),
                 {"aktenzeichen": aktenzeichen, "doc_type": doc["doc_type"], "storage_path": doc["url"]},
             )
-            conn.commit()
 
     return snapshot_id, aktenzeichen
-    
+
+
 def insert_parcel(aktenzeichen: str, snapshot_id: int, fields: dict) -> int:
     ez = fields.get("EZ")
     grundstuecksnr_raw = fields.get("Grundstücksnr.") or fields.get("Grundstücksnr")
@@ -144,7 +145,7 @@ def insert_parcel(aktenzeichen: str, snapshot_id: int, fields: dict) -> int:
     if not ez:
         return None
 
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         result = conn.execute(
             text("""
                 INSERT INTO listing_parcels (
@@ -168,6 +169,5 @@ def insert_parcel(aktenzeichen: str, snapshot_id: int, fields: dict) -> int:
             },
         )
         parcel_id = result.scalar()
-        conn.commit()
 
     return parcel_id
