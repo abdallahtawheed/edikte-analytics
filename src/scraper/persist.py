@@ -73,6 +73,9 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
     kategorie = fields.pop("Kategorie(n)", None)
     bekannt_gemacht_am = parse_de_date(fields.pop("Bekannt gemacht am", None))
     plz, ort = split_plz_ort(fields.pop("PLZ/Ort", ""))
+    schaetzwert = fields.pop("Schätzwert", None)
+    geringstes_gebot = fields.pop("Geringstes Gebot", None)
+    meistbot = fields.pop("Meistbot", None)
 
     if not aktenzeichen:
         raise ValueError("No Aktenzeichen found, refusing to insert an untrackable row")
@@ -83,11 +86,11 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
                 INSERT INTO listing_snapshots (
                     aktenzeichen, content_hash, source_url, dienststelle, aktenzeichen_wegen,
                     grundbuch, ort, plz, kategorie, bekannt_gemacht_am,
-                    status_title, berichtigte_fassung, extra
+                    status_title, berichtigte_fassung, schaetzwert, geringstes_gebot, meistbot, extra
                 ) VALUES (
                     :aktenzeichen, :content_hash, :source_url, :dienststelle, :aktenzeichen_wegen,
                     :grundbuch, :ort, :plz, :kategorie, :bekannt_gemacht_am,
-                    :status_title, :berichtigte_fassung, :extra
+                    :status_title, :berichtigte_fassung, :schaetzwert, :geringstes_gebot, :meistbot, :extra
                 )
                 RETURNING snapshot_id
             """),
@@ -104,6 +107,9 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
                 "bekannt_gemacht_am": bekannt_gemacht_am,
                 "status_title": parsed["status_title"],
                 "berichtigte_fassung": parsed.get("berichtigte_fassung", False),
+                "schaetzwert": parse_de_number(schaetzwert),
+                "geringstes_gebot": parse_de_number(geringstes_gebot),
+                "meistbot": parse_de_number(meistbot),
                 "extra": __import__("json").dumps(fields),
             },
         )

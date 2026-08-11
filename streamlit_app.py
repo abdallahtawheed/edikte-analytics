@@ -19,10 +19,9 @@ def load_objects():
         result = conn.execute(text("""
             SELECT
                 aktenzeichen, source_url, status, status_title, kategorie,
-                ort, plz, dienststelle, scraped_at, latitude, longitude,
-                extra->>'Schätzwert' as schaetzwert_raw,
-                extra->>'Geringstes Gebot' as gebot_raw,
-                extra->>'Meistbot' as meistbot_raw,
+                ort, plz, dienststelle, scraped_at, bekannt_gemacht_am,
+                latitude, longitude, objektgroesse_m2,
+                schaetzwert, geringstes_gebot, meistbot,
                 extra->>'Liegenschaftsadresse' as adresse
             FROM objects_current
         """))
@@ -30,10 +29,10 @@ def load_objects():
 
     df["latitude"] = pd.to_numeric(df["latitude"], errors="coerce")
     df["longitude"] = pd.to_numeric(df["longitude"], errors="coerce")
-
-    df["schaetzwert"] = df["schaetzwert_raw"].apply(lambda v: parse_de_number(v) if isinstance(v, str) else None)
-    df["gebot"] = df["gebot_raw"].apply(lambda v: parse_de_number(v) if isinstance(v, str) else None)
-    df["meistbot"] = df["meistbot_raw"].apply(lambda v: parse_de_number(v) if isinstance(v, str) else None)
+    df["objektgroesse_m2"] = pd.to_numeric(df["objektgroesse_m2"], errors="coerce")
+    df["schaetzwert"] = pd.to_numeric(df["schaetzwert"], errors="coerce")
+    df["geringstes_gebot"] = pd.to_numeric(df["geringstes_gebot"], errors="coerce")
+    df["meistbot"] = pd.to_numeric(df["meistbot"], errors="coerce")
 
     return df
 
@@ -59,19 +58,21 @@ if search_ort:
     filtered = filtered[filtered["ort"].str.contains(search_ort, case=False, na=False)]
 
 
-st.sidebar.subheader("Price range (Geringstes Gebot)")
-valid_gebot = df["gebot"].dropna()
-if not valid_gebot.empty:
-    price_min, price_max = st.sidebar.slider(
-        "EUR",
-        min_value=float(valid_gebot.min()),
-        max_value=float(valid_gebot.max()),
-        value=(float(valid_gebot.min()), float(valid_gebot.max())),
-    )
-    filtered = filtered[
-        filtered["gebot"].isna() | filtered["gebot"].between(price_min, price_max)
-    ]
+st.sidebar.subheader("Geringstes Gebot (EUR)")
+col1, col2 = st.sidebar.columns(2)
+price_min = col1.number_input("Min", min_value=0.0, value=0.0, step=1000.0)
+price_max = col2.number_input("Max", min_value=0.0, value=float(df["geringstes_gebot"].max() or 0), step=1000.0)
+filtered = filtered[
+    filtered["geringstes_gebot"].isna() | filtered["geringstes_gebot"].between(price_min, price_max)
+]
 
+st.sidebar.subheader("Size (m²)")
+col3, col4 = st.sidebar.columns(2)
+size_min = col3.number_input("Min m²", min_value=0.0, value=0.0, step=5.0)
+size_max = col4.number_input("Max m²", min_value=0.0, value=float(df["objektgroesse_m2"].max() or 0), step=5.0)
+filtered = filtered[
+    filtered["objektgroesse_m2"].isna() | filtered["objektgroesse_m2"].between(size_min, size_max)
+]
 st.sidebar.markdown(f"**{len(filtered)}** of {len(df)} objects shown")
 
 
@@ -80,12 +81,16 @@ st.subheader("Listings")
 event = st.dataframe(
     filtered[[
         "aktenzeichen", "status", "kategorie", "ort", "adresse",
-        "schaetzwert", "gebot", "meistbot", "dienststelle", "source_url"
+        "schaetzwert", "geringstes_gebot", "meistbot",
+        "bekannt_gemacht_am", "scraped_at",
+        "dienststelle", "source_url"
     ]],
     column_config={
         "schaetzwert": st.column_config.NumberColumn("Schätzwert", format="€%.2f"),
-        "gebot": st.column_config.NumberColumn("Geringstes Gebot", format="€%.2f"),
+        "geringstes_gebot": st.column_config.NumberColumn("Geringstes Gebot", format="€%.2f"),
         "meistbot": st.column_config.NumberColumn("Meistbot", format="€%.2f"),
+        "bekannt_gemacht_am": st.column_config.DateColumn("Published"),
+        "scraped_at": st.column_config.DatetimeColumn("Last scraped"),
         "source_url": st.column_config.LinkColumn("Link", display_text="Open"),
     },
     use_container_width=True,
@@ -107,8 +112,7 @@ if not map_data.empty:
     map_data["tooltip_text"] = (
         map_data["status_title"].fillna("") + " — "
         + map_data["ort"].fillna("") + "\n"
-        + map_data["gebot_raw"].fillna("no price listed")
-    )
+        + map_data["geringstes_gebot"].fillna(0).astype(str) + " EUR")
 
     layers = [
         pdk.Layer(
@@ -155,8 +159,7 @@ if selected_aktenzeichen:
     with engine.connect() as conn:
         history = conn.execute(
             text("""
-                SELECT scraped_at, status_title, extra->>'Schätzwert' as schaetzwert,
-                    extra->>'Geringstes Gebot' as gebot, source_url
+                SELECT scraped_at, status_title, schaetzwert, geringstes_gebot, meistbot, source_url
                 FROM listing_snapshots
                 WHERE aktenzeichen = :ak AND source_url IS NOT NULL
                 ORDER BY scraped_at DESC
