@@ -82,5 +82,9 @@ Full schema in [SCHEMA.md](/docs/SCHEMA.md).
   handling is keyword-based flagging; not a substitute for reading the full report.
 - Cost and time to remediate flagged defects is not estimated, this would require 
   construction-cost domain knowledge outside this project's scope.
+- ~4% of scraped objects (17 of 425 as of Aug 2026) could not be geocoded, mostly 
+  due to informal rural location descriptions, zone-level addresses, or genuinely 
+  missing street addresses in the source data itself, not a tooling gap. See 
+  ADR-008 for the full breakdown.
 
 Full ADR history in [DECISIONS.md](/docs/DECISIONS.md).

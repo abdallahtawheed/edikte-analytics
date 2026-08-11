@@ -153,3 +153,24 @@ SELECT DISTINCT ON (s.aktenzeichen)
 FROM listing_snapshots s
 LEFT JOIN listing_status_events e ON e.aktenzeichen = s.aktenzeichen
 ORDER BY s.aktenzeichen, s.scraped_at DESC, e.observed_at DESC;
+
+-- ============================================================
+-- View: latest known state per OBJECT (source_url-level), the
+-- correct granularity for browsing/mapping, unlike listings_
+-- current which collapses multi-object aktenzeichens to one row.
+-- Joins in coordinates directly since that's the primary reason
+-- this view exists (feeding the Streamlit map).
+-- ============================================================
+CREATE VIEW objects_current AS
+SELECT DISTINCT ON (s.source_url)
+    s.*,
+    e.status,
+    e.observed_at AS status_observed_at,
+    e.transition_valid,
+    c.latitude,
+    c.longitude
+FROM listing_snapshots s
+LEFT JOIN listing_status_events e ON e.aktenzeichen = s.aktenzeichen
+LEFT JOIN listing_coordinates c ON c.source_url = s.source_url
+WHERE s.source_url IS NOT NULL
+ORDER BY s.source_url, s.scraped_at DESC, e.observed_at DESC;
