@@ -21,7 +21,7 @@ def load_objects():
             SELECT
                 oc.snapshot_id, oc.aktenzeichen, oc.source_url, oc.status_title, oc.kategorie,
                 oc.ort, oc.plz, oc.dienststelle, oc.scraped_at, oc.bekannt_gemacht_am,
-                oc.latitude, oc.longitude, oc.objektgroesse_m2,
+                oc.latitude, oc.longitude, oc.objektgroesse_m2, oc.blnr,
                 oc.schaetzwert, oc.geringstes_gebot, oc.meistbot,
                 oc.extra->>'Liegenschaftsadresse' as adresse,
                 (SELECT count(*) FROM listing_flags f WHERE f.snapshot_id = oc.snapshot_id) as flag_count
@@ -32,6 +32,7 @@ def load_objects():
     df["latitude"] = pd.to_numeric(df["latitude"], errors="coerce")
     df["longitude"] = pd.to_numeric(df["longitude"], errors="coerce")
     df["objektgroesse_m2"] = pd.to_numeric(df["objektgroesse_m2"], errors="coerce")
+    df["is_bundled"] = df["blnr"].fillna("").str.contains(",")
     df["schaetzwert"] = pd.to_numeric(df["schaetzwert"], errors="coerce")
     df["geringstes_gebot"] = pd.to_numeric(df["geringstes_gebot"], errors="coerce")
     df["meistbot"] = pd.to_numeric(df["meistbot"], errors="coerce")
@@ -83,13 +84,15 @@ st.sidebar.markdown(f"**{len(filtered)}** of {len(df)} objects shown")
 st.subheader("Listings")
 event = st.dataframe(
     filtered[[
-        "aktenzeichen", "status", "kategorie", "ort", "adresse", "objektgroesse_m2",
+        "aktenzeichen", "status", "kategorie", "ort", "adresse",
+        "blnr", "is_bundled", "objektgroesse_m2",
         "schaetzwert", "geringstes_gebot", "meistbot",
-        "bekannt_gemacht_am", "scraped_at",
-        "dienststelle", "source_url"
+        "bekannt_gemacht_am", "scraped_at", "dienststelle", "source_url"
     ]],
     column_config={
-        "objektgroesse_m2" : st.column_config.NumberColumn("Size (m²)", format="%.1f"),
+        "blnr": st.column_config.TextColumn("BLNr"),
+        "is_bundled": st.column_config.CheckboxColumn("Multiple units?"),
+        "objektgroesse_m2": st.column_config.NumberColumn("Size (m²)", format="%.1f"),
         "schaetzwert": st.column_config.NumberColumn("Schätzwert", format="€%.2f"),
         "geringstes_gebot": st.column_config.NumberColumn("Geringstes Gebot", format="€%.2f"),
         "meistbot": st.column_config.NumberColumn("Meistbot", format="€%.2f"),

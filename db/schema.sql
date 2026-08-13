@@ -160,7 +160,8 @@ SELECT DISTINCT ON (s.source_url)
     c.latitude,
     c.longitude,
     p.objektgroesse_m2,
-    p.grundstuecksgroesse_m2
+    p.grundstuecksgroesse_m2,
+    p.blnr
 FROM listing_snapshots s
 LEFT JOIN listing_coordinates c ON c.source_url = s.source_url
 LEFT JOIN listing_parcels p ON p.snapshot_id = s.snapshot_id

@@ -304,3 +304,70 @@ display and to make future additions easier to reason about. Existing regex
 patterns remain vulnerable to negation (a "not contaminated" statement could 
 still match a bare "Altlast" pattern); this is a known, accepted limitation 
 pending the eventual LLM-based approach.
+
+## ADR-012: LocalExecutor instead of CeleryExecutor for Airflow orchestration
+
+**Date:** 2026-08-13
+**Status:** Accepted
+
+**Context:** Adding a fourth pipeline task (dbt) triggered a full Airflow image 
+rebuild, after which the Celery worker container crashed on every startup with 
+`AttributeError: 'NoneType' object has no attribute 'split'` inside Celery's own 
+hostname-resolution logic (`celery/utils/nodenames.py`). This occurred even 
+against the completely unmodified official Airflow docker-compose template, 
+ruling out anything in this project's own code or configuration as the cause. 
+Multiple mitigation attempts failed identically: setting the Docker Compose 
+`hostname:` field, passing an explicit `--hostname` string to the Celery worker 
+command, and using Celery's own `%h` hostname template. The failure is 
+consistent with a known class of Docker Desktop for Windows issue: containers 
+run inside a WSL2 Linux VM with a networking translation layer, and low-level 
+socket/hostname resolution calls (which Celery's node-naming depends on) are a 
+common friction point on this specific platform combination, not on native 
+Linux or macOS.
+
+**Decision:** Switch Airflow's executor from CeleryExecutor to LocalExecutor. 
+LocalExecutor runs tasks directly within the scheduler process, with no Celery, 
+Redis, or separate worker container involved, avoiding this class of bug 
+entirely. Removed the `airflow-worker`, `redis`, and `airflow-triggerer` 
+services and all Celery-specific environment variables.
+
+**Alternatives considered:** Continuing to patch Celery's hostname handling. 
+Rejected after four independent, differently-shaped fixes failed identically, 
+strong evidence this is a platform-level issue not addressable through 
+application configuration. Also considered: dual-booting to Linux specifically 
+to unblock CeleryExecutor. Valid long-term option (this bug is very unlikely to 
+occur on native Linux), but not required for this project to function correctly 
+today.
+
+**Consequences:** CeleryExecutor's main benefit, distributing task execution 
+across multiple worker machines, does not apply to this project's single-machine 
+deployment, so this is not a functional loss for current use. If the project 
+ever needs true distributed execution (e.g. a genuinely production, multi-node 
+deployment), CeleryExecutor would need to be revisited, ideally on a Linux host 
+where this bug does not appear to manifest.
+
+
+## OPEN ITEM: BLNr as the true unit of analysis, not source_url/page
+
+**Raised:** 2026-08-13
+
+Confirmed BLNr, not the page/source_url, is the actual legally purchasable/
+biddable unit. Current schema and all downstream views (objects_current, 
+Streamlit, dbt marts) are built around one-row-per-page, which is correct for 
+the common case (one BLNr per page) but incorrect for bundled-BLNr pages (e.g. 
+"W 222 + KFZ Stellplätze 1-3", one page listing four BLNrs as one comma-separated 
+string in listing_parcels.blnr).
+
+Proper fix requires: 
+1. Splitting listing_parcels to one row per BLNr, not per page, at insert time.
+2. Resolving an open empirical question first: does pricing (Schätzwert/Meistbot) 
+   ever genuinely differ per BLNr within a bundled page, or is it always one 
+   shared price for the whole bundle? Needs checking more real bundled examples 
+   before deciding how price fields should be modeled at the BLNr grain.
+3. Reworking objects_current, Streamlit, and any dbt marts built on the 
+   page-level grain to operate at the BLNr grain instead.
+
+Stopgap in place for now: BLNr and a bundle-indicator flag surfaced in Streamlit's 
+table, so bundled listings are at least visible, not silently misrepresented as 
+single units. Full rework deferred, scoped as a dedicated future task rather than 
+folded into ongoing feature work.

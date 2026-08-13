@@ -32,7 +32,7 @@ actually happening in it.
 | Cloud Storage | Raw HTML/PDF retention for re-parsing without re-scraping |
 | BigQuery | Analytical layer: dbt marts, price/location analysis |
 | Dataplex | Cataloging and lineage across Cloud SQL and BigQuery |
-| Airflow | Scheduled scrape, parse, geocode, diff, alert pipeline |
+| Airflow (LocalExecutor) | Scheduled scrape, geocode, sync, and dbt run, daily pipeline |
 | dbt | Transformation layer (staging to marts) |
 | Terraform | Infrastructure as code for all GCP resources |
 | Streamlit | Filtering, timeline, and map interface on top of the data |
@@ -67,6 +67,11 @@ column on `listing_snapshots` rather than fixed columns, deliberately, until the
 shape is well understood. These get promoted to real columns once confirmed stable. 
 Full schema in [SCHEMA.md](/docs/SCHEMA.md).
 
+Analytical layer (BigQuery + dbt) mirrors the transactional tables via a daily 
+sync, with a staging layer (one model per table) and an initial mart 
+(mart_current_objects) joining snapshot, parcel, coordinate, and flag data into 
+one analysis-ready view. See docs/ARCHITECTURE.md for the full pipeline diagram.
+
 # Setup/run instructions
 
 [TBD]
@@ -86,5 +91,28 @@ Full schema in [SCHEMA.md](/docs/SCHEMA.md).
   due to informal rural location descriptions, zone-level addresses, or genuinely 
   missing street addresses in the source data itself, not a tooling gap. See 
   ADR-008 for the full breakdown.
-
+- Multi-object Aktenzeichen cases (e.g. an apartment sold alongside several 
+  parking spaces under one court case) can have objects at different lifecycle 
+  stages simultaneously. Status is tracked and displayed per-object (via 
+  status_title), not per-case; listing_status_events remains case-level and is 
+  used only for anomaly detection, not for object-level display (see ADR-010).
+- Zuschlag-type listing pages use several different real HTML structures for 
+  Grundbuch/EZ/BLNr/address data (plain prose, empty-labeled div.row blocks, 
+  single-object and multi-BLNr-bundle variants), each handled by dedicated 
+  extraction logic. New, as-yet-unseen page shapes may still fall through 
+  without extracting this data; the schaetzwert/geringstes_gebot fields are 
+  genuinely absent on Zuschlag pages by design (they only carry meistbot).
+- Flag keyword matching does not account for negation beyond a simple nearby 
+  "nicht/kein" check; some false positives are possible where a term appears in 
+  a sentence explicitly denying it applies (see ADR-011). A more robust, 
+  context-aware approach (LLM-based classification) is scoped as a future 
+  improvement, not yet built.
+- Airflow orchestration runs on LocalExecutor, not CeleryExecutor, due to a 
+  platform-specific (Windows/Docker Desktop) Celery bug; see ADR-012.
+- BLNr, not the scraped page (source_url), is the actual legally purchasable 
+  unit. Most listings have one BLNr per page and this distinction doesn't 
+  matter, but some pages bundle multiple BLNrs (e.g. an apartment sold with 
+  several parking spaces) as one comma-separated value, not yet modeled as 
+  separate rows. Surfaced in the dashboard as a visible flag rather than hidden; 
+  full rework tracked as an open item in DECISIONS.md.
 Full ADR history in [DECISIONS.md](/docs/DECISIONS.md).
