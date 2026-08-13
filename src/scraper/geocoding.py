@@ -2,12 +2,12 @@ import time
 import requests
 import re
 
-
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 DEFAULT_HEADERS = {
     "User-Agent": "edikte-analytics-scraper/0.1 (personal portfolio project, contact: <your email>)"
 }
-RATE_LIMIT_SECONDS = 1.0  # Nominatim's usage policy requires max 1 req/sec
+RATE_LIMIT_SECONDS = 1.5  # slightly more conservative than Nominatim's bare minimum
+MAX_RETRIES = 3
 
 def clean_address_for_geocoding(address: str | None) -> str | None:
     """
@@ -18,7 +18,7 @@ def clean_address_for_geocoding(address: str | None) -> str | None:
     if not address:
         return None
     # split on comma, slash, or ' und ' (German "and"), take the first piece
-    first_segment = re.split(r",|/| und ", address)[0].strip()
+    first_segment = re.split(r",|/| und | u\. ", address)[0].strip()
     return first_segment or None
 
 
@@ -39,15 +39,21 @@ def geocode_address(address: str, plz: str | None, ort: str | None) -> tuple[flo
         "countrycodes": "at",  # restrict to Austria, avoids false matches elsewhere
     }
 
-    response = requests.get(NOMINATIM_URL, params=params, headers=DEFAULT_HEADERS, timeout=15)
-    response.raise_for_status()
-    results = response.json()
+    for attempt in range(MAX_RETRIES):
+        response = requests.get(NOMINATIM_URL, params=params, headers=DEFAULT_HEADERS, timeout=15)
 
-    time.sleep(RATE_LIMIT_SECONDS)  # respect rate limit regardless of success/failure
+        if response.status_code == 429:
+            wait = RATE_LIMIT_SECONDS * (2 ** attempt)  # exponential backoff: 1.5s, 3s, 6s
+            time.sleep(wait)
+            continue
 
-    if not results:
-        return None
+        response.raise_for_status()
+        results = response.json()
+        time.sleep(RATE_LIMIT_SECONDS)
 
-    lat = float(results[0]["lat"])
-    lon = float(results[0]["lon"])
-    return lat, lon
+        if not results:
+            return None
+
+        return float(results[0]["lat"]), float(results[0]["lon"])
+
+    return None  # exhausted retries, treat as "not found" rather than crashing the whole task

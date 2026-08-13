@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: raw
+    dataset: edikte_analytics
+    tables:
+      - name: raw_listing_snapshots
+      - name: raw_listing_status_events
+      - name: raw_listing_parcels
+      - name: raw_listing_documents
+      - name: raw_listing_flags
+      - name: raw_listing_coordinates

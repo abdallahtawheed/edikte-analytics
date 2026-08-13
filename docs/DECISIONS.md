@@ -239,3 +239,68 @@ rather than engine.connect() + .commit(), to remain compatible with both the loc
 development environment (SQLAlchemy 2.0) and Airflow's runtime (SQLAlchemy 1.4). 
 This is now a real constraint on the codebase, not just a one-off fix, worth noting 
 for anyone extending it.
+
+## ADR-010: Object-level status must be derived from status_title, not the case-level state machine
+
+**Date:** 2026-08-12
+**Status:** Accepted
+
+**Context:** listing_status_events tracks status transitions keyed by aktenzeichen 
+(case), consistent with its original design purpose (case-level anomaly detection). 
+Discovered via real data that objects_current's join against this table produced 
+incorrect status values when a single Aktenzeichen has multiple objects at 
+different lifecycle stages simultaneously (e.g. one object already sold via 
+Zuschlag while a sibling object under the same case is still pre-auction). The 
+joined status reflected whichever object was most recently scraped for that 
+Aktenzeichen, not the specific object being displayed.
+
+**Decision:** objects_current no longer joins listing_status_events. Object-level 
+status is derived by classifying each row's own status_title (already correctly 
+per-object) via classify_status(), applied in the application layer (Streamlit).
+
+**Alternatives considered:** Rekeying listing_status_events to source_url instead 
+of aktenzeichen. Rejected for now, since case-level anomaly detection (its original 
+purpose) is still a legitimate, separate use case worth preserving; rekeying would 
+conflate two different questions ("is this case's history normal" vs "what state is 
+this object in") into one table.
+
+**Consequences:** Two parallel status concepts now coexist deliberately: 
+status_title/classify_status() for accurate per-object display, and 
+listing_status_events for case-level transition validation. Any future feature 
+needing "current status" must be explicit about which granularity it means.
+
+## ADR-011: Evidence-based flag keyword selection via corpus frequency analysis
+
+**Date:** 2026-08-12
+**Status:** Accepted
+
+**Context:** Original flag keywords (ADR/design decision from earlier in the 
+project) were selected by manually reading ~15 individual listings during 
+development, not validated against the full scraped corpus. This risked both 
+missing genuinely common risk terms and including boilerplate legal language 
+that happens to sound risk-related.
+
+**Decision:** Ran word-frequency analysis across all ~450 scraped listings' 
+Beschreibung/Sonstige Hinweise text, reviewed top-100 and rare-word tails, and 
+spot-checked ambiguous candidates against real excerpts before inclusion or 
+rejection. Confirmed several new real categories (financial arrears, boundary 
+disputes, environmental contamination, foreign-buyer restrictions, unauthorized 
+construction) and explicitly rejected several high-frequency candidates that 
+turned out to be standard legal boilerplate present on nearly every listing 
+regardless of actual risk (Risiko, Räumung, Delogierung, Wiederversteigerung, 
+Schuld, Errichtet, Abgaben).
+
+**Alternatives considered:** LLM-based classification (sending listing text to 
+an LLM for context-aware risk extraction) would likely outperform keyword 
+matching, particularly for negation handling (e.g. "NOT registered as a 
+contaminated site" vs "IS registered"). Deferred to v1.5/v2: real cost, latency, 
+and reliability tradeoffs versus the immediate, evidence-backed keyword approach 
+built here.
+
+**Consequences:** Flags are now organized into explicit categories (structural 
+damage, construction/legality, legal/financial, boundary/access, environmental, 
+buyer restrictions) rather than a flat list, both for more meaningful Streamlit 
+display and to make future additions easier to reason about. Existing regex 
+patterns remain vulnerable to negation (a "not contaminated" statement could 
+still match a bare "Altlast" pattern); this is a known, accepted limitation 
+pending the eventual LLM-based approach.

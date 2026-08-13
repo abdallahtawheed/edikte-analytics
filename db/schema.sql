@@ -109,6 +109,7 @@ CREATE TABLE listing_flags (
     flag_id                 BIGSERIAL PRIMARY KEY,
     aktenzeichen              TEXT NOT NULL,
     snapshot_id               BIGINT REFERENCES listing_snapshots(snapshot_id),
+    category                  TEXT,
     flag_type                 TEXT NOT NULL,
     matched_keyword            TEXT,
     source_excerpt             TEXT
@@ -142,21 +143,26 @@ ORDER BY s.aktenzeichen, s.scraped_at DESC, e.observed_at DESC;
 
 -- ============================================================
 -- View: latest known state per OBJECT (source_url-level), used
--- by Streamlit. Joins in coordinates and parcel-level size data.
+-- by Streamlit. Deliberately does NOT join listing_status_events,
+-- since that table tracks status per Aktenzeichen (case), not per
+-- object. A single case can have multiple objects at different
+-- lifecycle stages simultaneously (some auctioned, some not), so
+-- joining case-level status here produced wrong/stale results for
+-- individual objects. Use status_title (already per-object,
+-- correct) classified via classify_status() for object-level
+-- status instead. listing_status_events remains valid for
+-- case-level anomaly detection (see ADR-010).
 -- ============================================================
+
 CREATE VIEW objects_current AS
 SELECT DISTINCT ON (s.source_url)
     s.*,
-    e.status,
-    e.observed_at AS status_observed_at,
-    e.transition_valid,
     c.latitude,
     c.longitude,
     p.objektgroesse_m2,
     p.grundstuecksgroesse_m2
 FROM listing_snapshots s
-LEFT JOIN listing_status_events e ON e.aktenzeichen = s.aktenzeichen
 LEFT JOIN listing_coordinates c ON c.source_url = s.source_url
 LEFT JOIN listing_parcels p ON p.snapshot_id = s.snapshot_id
 WHERE s.source_url IS NOT NULL
-ORDER BY s.source_url, s.scraped_at DESC, e.observed_at DESC;
+ORDER BY s.source_url, s.scraped_at DESC;

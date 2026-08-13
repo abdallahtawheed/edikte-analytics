@@ -63,6 +63,35 @@ def split_plz_ort(value: str) -> tuple[str | None, str | None]:
         return match.group(1), match.group(2)
     return None, value.strip()
 
+def insert_flags(aktenzeichen: str, snapshot_id: int, flags: list[dict]) -> int:
+    if not flags:
+        return 0
+
+    with engine.begin() as conn:
+        existing = conn.execute(
+            text("SELECT count(*) FROM listing_flags WHERE snapshot_id = :sid"),
+            {"sid": snapshot_id},
+        ).scalar()
+
+        if existing > 0:
+            return 0
+
+        for flag in flags:
+            conn.execute(
+                text("""
+                    INSERT INTO listing_flags (aktenzeichen, snapshot_id, category, flag_type, matched_keyword, source_excerpt)
+                    VALUES (:aktenzeichen, :snapshot_id, :category, :flag_type, :matched_keyword, :source_excerpt)
+                """),
+                {
+                    "aktenzeichen": aktenzeichen,
+                    "snapshot_id": snapshot_id,
+                    "category": flag["category"],
+                    "flag_type": flag["flag_type"],
+                    "matched_keyword": flag["matched_keyword"],
+                    "source_excerpt": flag["source_excerpt"],
+                },
+            )
+    return len(flags)
 
 def insert_snapshot(parsed: dict) -> tuple[int, str]:
     """Insert one row into listing_snapshots. Returns (snapshot_id, aktenzeichen)."""

@@ -8,6 +8,17 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
+import subprocess
+
+def run_dbt():
+    result = subprocess.run(
+        ["dbt", "run", "--project-dir", "/opt/airflow/dbt_project", "--profiles-dir", "/opt/airflow/.dbt"],
+        capture_output=True, text=True
+    )
+    print(result.stdout)
+    if result.returncode != 0:
+        print(result.stderr)
+        raise Exception("dbt run failed")
 
 def run_scrape():
     import sys
@@ -35,7 +46,12 @@ def run_scrape():
             print(f"Error on {url}: {e}")
         time.sleep(1.0)
 
-
+def run_bigquery_sync():
+    import sys
+    sys.path.insert(0, "/opt/airflow/src")
+    from scraper.sync_to_bigquery import main
+    main()
+    
 def run_geocoding():
     import sys
     sys.path.insert(0, "/opt/airflow/src")
@@ -61,4 +77,14 @@ with DAG(
         python_callable=run_geocoding,
     )
 
-    scrape_task >> geocode_task
+    sync_task = PythonOperator(
+            task_id="sync_to_bigquery",
+            python_callable=run_bigquery_sync,
+        )
+
+    dbt_task = PythonOperator(
+            task_id="dbt_run",
+            python_callable=run_dbt,
+        )
+
+    scrape_task >> geocode_task >> sync_task >> dbt_task

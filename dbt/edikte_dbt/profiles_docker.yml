@@ -1,0 +1,11 @@
+edikte_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: edikte-analytics-2026
+      dataset: edikte_analytics_dbt
+      location: europe-west3
+      keyfile: /opt/airflow/airflow-key.json
+      threads: 4

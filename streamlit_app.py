@@ -7,7 +7,8 @@ import pandas as pd
 from sqlalchemy import text
 from scraper.persist import engine
 from parser.parse import parse_de_number
-
+from scraper.state_machine import classify_status
+from parser.flags import FLAG_CATEGORIES
 
 st.set_page_config(page_title="edikte-analytics", layout="wide")
 st.title("Austrian Judicial Auction Listings")
@@ -18,12 +19,13 @@ def load_objects():
     with engine.connect() as conn:
         result = conn.execute(text("""
             SELECT
-                aktenzeichen, source_url, status, status_title, kategorie,
-                ort, plz, dienststelle, scraped_at, bekannt_gemacht_am,
-                latitude, longitude, objektgroesse_m2,
-                schaetzwert, geringstes_gebot, meistbot,
-                extra->>'Liegenschaftsadresse' as adresse
-            FROM objects_current
+                oc.snapshot_id, oc.aktenzeichen, oc.source_url, oc.status_title, oc.kategorie,
+                oc.ort, oc.plz, oc.dienststelle, oc.scraped_at, oc.bekannt_gemacht_am,
+                oc.latitude, oc.longitude, oc.objektgroesse_m2,
+                oc.schaetzwert, oc.geringstes_gebot, oc.meistbot,
+                oc.extra->>'Liegenschaftsadresse' as adresse,
+                (SELECT count(*) FROM listing_flags f WHERE f.snapshot_id = oc.snapshot_id) as flag_count
+            FROM objects_current oc
         """))
         df = pd.DataFrame(result.fetchall(), columns=result.keys())
 
@@ -33,6 +35,7 @@ def load_objects():
     df["schaetzwert"] = pd.to_numeric(df["schaetzwert"], errors="coerce")
     df["geringstes_gebot"] = pd.to_numeric(df["geringstes_gebot"], errors="coerce")
     df["meistbot"] = pd.to_numeric(df["meistbot"], errors="coerce")
+    df["status"] = df["status_title"].apply(classify_status)
 
     return df
 
@@ -80,12 +83,13 @@ st.sidebar.markdown(f"**{len(filtered)}** of {len(df)} objects shown")
 st.subheader("Listings")
 event = st.dataframe(
     filtered[[
-        "aktenzeichen", "status", "kategorie", "ort", "adresse",
+        "aktenzeichen", "status", "kategorie", "ort", "adresse", "objektgroesse_m2",
         "schaetzwert", "geringstes_gebot", "meistbot",
         "bekannt_gemacht_am", "scraped_at",
         "dienststelle", "source_url"
     ]],
     column_config={
+        "objektgroesse_m2" : st.column_config.NumberColumn("Size (m²)", format="%.1f"),
         "schaetzwert": st.column_config.NumberColumn("Schätzwert", format="€%.2f"),
         "geringstes_gebot": st.column_config.NumberColumn("Geringstes Gebot", format="€%.2f"),
         "meistbot": st.column_config.NumberColumn("Meistbot", format="€%.2f"),
@@ -153,8 +157,18 @@ else:
 
 # --- Detail view ---
 st.subheader("Object detail")
-selected_aktenzeichen = st.selectbox("Select an Aktenzeichen for history", filtered["aktenzeichen"].unique())
 
+default_index = 0
+if selected_row is not None:
+    aktenzeichen_list = list(filtered["aktenzeichen"].unique())
+    if selected_row["aktenzeichen"] in aktenzeichen_list:
+        default_index = aktenzeichen_list.index(selected_row["aktenzeichen"])
+
+selected_aktenzeichen = st.selectbox(
+    "Select an Aktenzeichen for history",
+    filtered["aktenzeichen"].unique(),
+    index=default_index,
+)
 if selected_aktenzeichen:
     with engine.connect() as conn:
         history = conn.execute(
@@ -169,3 +183,26 @@ if selected_aktenzeichen:
         hist_df = pd.DataFrame(history.fetchall(), columns=history.keys())
     st.write(f"Full history for **{selected_aktenzeichen}** ({len(hist_df)} snapshot(s) across all its objects):")
     st.dataframe(hist_df, use_container_width=True)
+
+
+if selected_row is not None:
+    with engine.connect() as conn:
+        flag_rows = conn.execute(
+            text("""
+                SELECT category, flag_type, matched_keyword, source_excerpt
+                FROM listing_flags
+                WHERE snapshot_id = :sid
+                ORDER BY category, flag_type
+            """),
+            {"sid": int(selected_row["snapshot_id"])},
+        ).fetchall()
+
+    if flag_rows:
+        st.warning(f"{len(flag_rows)} potential issue(s) flagged on this listing:")
+        current_category = None
+        for f in flag_rows:
+            if f.category != current_category:
+                current_category = f.category
+                label = FLAG_CATEGORIES.get(f.category, {}).get("label", f.category)
+                st.markdown(f"**{label}**")
+            st.write(f"- {f.flag_type}: \"{f.matched_keyword}\" — ...{f.source_excerpt}...")
