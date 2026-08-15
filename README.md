@@ -74,7 +74,7 @@ one analysis-ready view. See docs/ARCHITECTURE.md for the full pipeline diagram.
 
 # Setup/run instructions
 
-[TBD]
+[TBD Soon]
 
 # Known limitations
 
