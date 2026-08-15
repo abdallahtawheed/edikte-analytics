@@ -28,7 +28,7 @@ def process_listing(url: str) -> str:
 
         fields_snapshot = dict(data["raw_fields"])
         snapshot_id, aktenzeichen = insert_snapshot(data)
-        insert_status_event(aktenzeichen, data["status_title"])
+        insert_status_event(aktenzeichen, data["source_url"], data["status_title"])
         insert_parcel(aktenzeichen, snapshot_id, fields_snapshot)
 
         beschreibung = fields_snapshot.get("Beschreibung (WE)", "")

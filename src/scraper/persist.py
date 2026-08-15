@@ -160,10 +160,14 @@ def insert_snapshot(parsed: dict) -> tuple[int, str]:
 
 
 def insert_parcel(aktenzeichen: str, snapshot_id: int, fields: dict) -> int:
-    ez = fields.get("EZ")
-    grundstuecksnr_raw = fields.get("Grundstücksnr.") or fields.get("Grundstücksnr")
+    ez = fields.get("EZ") or fields.get("Einlagezahl")
+    grundstuecksnr_raw = (
+        fields.get("Grundstücksnr.")
+        or fields.get("Grundstücksnr")
+        or fields.get("Grundstücksnummer")
+    )
     grundstuecksnr = (
-        [p.strip() for p in grundstuecksnr_raw.split(",")]
+        [p.strip() for p in re.split(r"[,\s]+", grundstuecksnr_raw.strip())]
         if grundstuecksnr_raw else None
     )
     blnr = fields.get("BLNr")

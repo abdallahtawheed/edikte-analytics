@@ -10,31 +10,23 @@ CREATE TABLE listing_snapshots (
     scraped_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
     content_hash         TEXT NOT NULL,
     source_url            TEXT,
-
     dienststelle          TEXT,
     aktenzeichen_wegen    TEXT,
     grundbuch            TEXT,
     ort                  TEXT,
     plz                  TEXT,
     kategorie             TEXT,
-
     letzte_aenderung      TIMESTAMPTZ,
     bekannt_gemacht_am    DATE,
     berichtigte_fassung   BOOLEAN DEFAULT FALSE,
-
     status_title          TEXT,
-
-    schaetzwert            NUMERIC,   -- promoted from extra once confirmed stable
-    geringstes_gebot        NUMERIC,   -- promoted from extra once confirmed stable
-    meistbot               NUMERIC,   -- promoted from extra once confirmed stable
-
+    schaetzwert            NUMERIC,
+    geringstes_gebot        NUMERIC,
+    meistbot               NUMERIC,
     raw_html_path         TEXT,
-
     extra                 JSONB,
-
     CONSTRAINT fk_snapshot_status CHECK (status_title IS NOT NULL)
 );
-
 CREATE INDEX idx_snapshots_aktenzeichen ON listing_snapshots (aktenzeichen);
 CREATE INDEX idx_snapshots_scraped_at ON listing_snapshots (scraped_at);
 CREATE INDEX idx_snapshots_source_url ON listing_snapshots (source_url);
@@ -42,18 +34,28 @@ CREATE INDEX idx_snapshots_extra ON listing_snapshots USING GIN (extra);
 
 -- ============================================================
 -- State machine layer
+-- Tracked per OBJECT (source_url), not per Aktenzeichen. A single
+-- case can bundle multiple distinct objects (e.g. an apartment
+-- plus several parking spaces, or several land parcels), each with
+-- its own independent lifecycle. Originally keyed only by
+-- aktenzeichen, which interleaved unrelated objects' status
+-- histories into one misleading shared timeline (confirmed via
+-- real data, see ADR-013). aktenzeichen is retained on each row
+-- for case-level queries, but previous_status/transition_valid are
+-- computed per source_url.
 -- ============================================================
 CREATE TABLE listing_status_events (
     status_event_id      BIGSERIAL PRIMARY KEY,
     aktenzeichen          TEXT NOT NULL,
+    source_url            TEXT,
     status                TEXT NOT NULL,
     observed_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
     previous_status       TEXT,
     transition_valid      BOOLEAN NOT NULL,
     anomaly_note          TEXT
 );
-
 CREATE INDEX idx_status_events_aktenzeichen ON listing_status_events (aktenzeichen);
+CREATE INDEX idx_status_events_source_url ON listing_status_events (source_url);
 CREATE INDEX idx_status_events_status ON listing_status_events (status);
 
 -- ============================================================
@@ -66,12 +68,10 @@ CREATE TABLE listing_parcels (
     ez                    TEXT NOT NULL,
     grundstuecksnr         TEXT[],
     blnr                  TEXT,
-
     vadium                 NUMERIC,
     objektgroesse_m2        NUMERIC,
     grundstuecksgroesse_m2  NUMERIC
 );
-
 CREATE INDEX idx_parcels_aktenzeichen ON listing_parcels (aktenzeichen);
 CREATE INDEX idx_parcels_snapshot_id ON listing_parcels (snapshot_id);
 CREATE INDEX idx_parcels_ez ON listing_parcels (ez);
@@ -86,7 +86,6 @@ CREATE TABLE listing_documents (
     storage_path             TEXT NOT NULL,
     size_kb                  NUMERIC
 );
-
 CREATE INDEX idx_documents_aktenzeichen ON listing_documents (aktenzeichen);
 
 -- ============================================================
@@ -98,7 +97,6 @@ CREATE TABLE case_links (
     aktenzeichen_b           TEXT NOT NULL,
     relation_note             TEXT
 );
-
 CREATE INDEX idx_case_links_a ON case_links (aktenzeichen_a);
 CREATE INDEX idx_case_links_b ON case_links (aktenzeichen_b);
 
@@ -114,7 +112,6 @@ CREATE TABLE listing_flags (
     matched_keyword            TEXT,
     source_excerpt             TEXT
 );
-
 CREATE INDEX idx_flags_aktenzeichen ON listing_flags (aktenzeichen);
 CREATE INDEX idx_flags_type ON listing_flags (flag_type);
 
@@ -153,7 +150,6 @@ ORDER BY s.aktenzeichen, s.scraped_at DESC, e.observed_at DESC;
 -- status instead. listing_status_events remains valid for
 -- case-level anomaly detection (see ADR-010).
 -- ============================================================
-
 CREATE VIEW objects_current AS
 SELECT DISTINCT ON (s.source_url)
     s.*,

@@ -1,0 +1,13 @@
+.git
+.venv
+.env
+airflow/
+airflow-key.json
+docs/
+deploy/
+infra/
+*.pyc
+__pycache__
+.pytest_cache
+*.md
+.dbt/

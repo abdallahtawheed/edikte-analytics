@@ -7,6 +7,10 @@ import re
 
 MEISTBOT_PATTERN = re.compile(r"um das Meistbot von\s*([\d.,]+)\s*EUR\s*zugeschlagen")
 
+SCHRIFTLICHE_ANBOTE_GEBOT_PATTERN = re.compile(
+    r"schriftliche Anbot muss mindestens\s*([\d.,]+)\s*EUR", re.IGNORECASE
+)
+
 # in parser/parse.py, alongside MEISTBOT_PATTERN
 LIEGENSCHAFT_BLOCK_PATTERN = re.compile(
     r"Die Liegenschaft\(en\) Grundbuch\s*"
@@ -120,6 +124,22 @@ def parse_listing(html: str, source_url: str) -> dict:
                     result["raw_fields"].setdefault("BLNr", grundstuecksnr_match.group(2).strip())
                 elif blnr_only_match:
                     result["raw_fields"].setdefault("BLNr", blnr_only_match.group(1).strip())
+
+        # Schriftliche Anbote pages: minimum bid is in prose, not a structured field
+    if not result["raw_fields"].get("Geringstes Gebot"):
+        match = SCHRIFTLICHE_ANBOTE_GEBOT_PATTERN.search(page_text)
+        if match:
+            result["raw_fields"]["Geringstes Gebot"] = match.group(1) + " EUR"
+
+    # Schriftliche Anbote pages: no PLZ/Ort field, Adresse contains both lines
+    # combined (e.g. "Kollegg 2 9433 St.Andrä"). Split the same way split_plz_ort
+    # expects, so it flows through the existing pipeline unchanged.
+    if not result["raw_fields"].get("PLZ/Ort") and result["raw_fields"].get("Adresse"):
+        adresse_text = result["raw_fields"]["Adresse"]
+        match = re.search(r"(.*?)\s*(\d{4}\s+.+)$", adresse_text)
+        if match:
+            result["raw_fields"]["Liegenschaftsadresse"] = match.group(1).strip()
+            result["raw_fields"]["PLZ/Ort"] = match.group(2).strip()
     
     hashable_content = json.dumps(
     {

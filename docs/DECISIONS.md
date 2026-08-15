@@ -346,6 +346,17 @@ ever needs true distributed execution (e.g. a genuinely production, multi-node
 deployment), CeleryExecutor would need to be revisited, ideally on a Linux host 
 where this bug does not appear to manifest.
 
+## ADR-012 (REVISED): CeleryExecutor restored after identifying root cause
+
+**Update, 2026-08-14:** The original diagnosis (Windows/Docker Desktop hostname 
+resolution) was incorrect. Migrating to native Linux reproduced the identical 
+crash, ruling out platform-specific causes. Root cause identified: a breaking 
+change in the `click` library (8.3.0) affecting Celery's worker command parsing 
+(see https://github.com/pallets/click/issues/3071), confirmed via Astronomer's 
+public advisory. Fixed by pinning click==8.2.1 in requirements.txt. 
+CeleryExecutor restored; LocalExecutor was a working but ultimately unnecessary 
+workaround.
+
 
 ## OPEN ITEM: BLNr as the true unit of analysis, not source_url/page
 
@@ -370,4 +381,74 @@ Proper fix requires:
 Stopgap in place for now: BLNr and a bundle-indicator flag surfaced in Streamlit's 
 table, so bundled listings are at least visible, not silently misrepresented as 
 single units. Full rework deferred, scoped as a dedicated future task rather than 
-folded into ongoing feature work.
+folded into ongoing feature work. fixing it also would absorb on the grain for listing_status_events
+
+## OPEN ITEM: listing_status_events tracked per-case, not per-object (elevates ADR-010's original gap)
+
+**Raised:** 2026-08-14, confirmed actively corrupting mart_lifecycle_funnel output
+
+ADR-010 fixed object-level *display* (objects_current no longer joins case-level 
+status), but listing_status_events itself was never rekeyed. For multi-object 
+Aktenzeichen, status transitions recorded here mix different objects' histories 
+together, since previous_status can reflect a sibling object's prior state, not 
+the same object's own history. This produces both false-positive "invalid" 
+transitions and false-negative "valid" transitions that are actually nonsensical 
+pairings across two different objects.
+
+Confirmed impact: mart_lifecycle_funnel's transition_valid counts include this 
+noise. Proper fix requires rekeying listing_status_events to source_url (same 
+scope/complexity as the BLNr open item), a real schema and insert-logic change, 
+not a quick patch.
+
+## OPEN ITEM: Schriftliche Anbote pages not parsed, all structured fields empty
+
+**Raised:** 2026-08-15
+
+Confirmed via real data (aktenzeichen 9 E 8/25a, 9 E 1/24s): Schriftliche Anbote 
+listing pages use a distinct field structure not handled by any existing 
+extraction path (main div.row loop, Zuschlag prose regex, or the div.row 
+empty-label fallback). Field labels differ from other page types (e.g. 
+"Einlagezahl" instead of "EZ", "Grundstücksnummer" instead of "Grundstücksnr."). 
+Result: every structured field (ort, plz, kategorie, schaetzwert, 
+geringstes_gebot) is currently NULL for these listings, despite the raw data 
+being present on the page. Needs dedicated extraction logic, following the same 
+pattern established for Zuschlag pages (inspect real raw HTML, build targeted 
+regex/BeautifulSoup extraction, test against multiple real examples before 
+trusting broadly).
+
+## ADR-013: listing_status_events rekeyed to source_url (object-level), not just aktenzeichen
+
+**Date:** 2026-08-15
+
+**Context:** listing_status_events was originally keyed and queried only by 
+aktenzeichen (case). Confirmed via real data that multi-object cases (e.g. 
+aktenzeichen 21 E 42/25d, five distinct land parcels under one case) produced 
+apparently chaotic, self-contradicting status histories, one object's status 
+change would be recorded with previous_status pulled from a completely 
+different sibling object's most recent state, since the lookup only scoped by 
+aktenzeichen. Each individual event was factually correct for its own object; 
+the corruption was in the previous_status sequencing, which conflated 
+independent objects' timelines into one misleading shared stream. This directly 
+produced invalid-looking transition counts in mart_lifecycle_funnel.
+
+**Decision:** Added source_url to listing_status_events. get_previous_status 
+and insert_status_event now scope by source_url, not aktenzeichen, matching 
+the pattern already used correctly by listing_snapshots, listing_parcels, 
+listing_documents, listing_flags, and listing_coordinates. aktenzeichen is 
+retained on the table for case-level queries.
+
+**Alternatives considered:** Rekeying to BLNr instead, which is the true 
+legally purchasable unit (see OPEN ITEM: BLNr as the true unit of analysis). 
+Deliberately not done here: BLNr-level modeling is a larger, separately-scoped 
+rework requiring listing_parcels to first be split to one row per BLNr, and an 
+open empirical question (whether bundled-BLNr pages ever carry differentiated 
+per-BLNr pricing) resolved first. source_url was chosen as the correct, 
+proven-pattern fix for the specific bug at hand; the BLNr rework remains a 
+distinct, tracked future item and would likely absorb this table's grain when 
+undertaken.
+
+**Consequences:** Status history recorded before this fix retains the old, 
+case-level-only conflated sequencing (source_url is NULL on those rows) and is 
+not retroactively correctable, since which object each historical event truly 
+belonged to isn't recoverable after the fact. History recorded from this point 
+forward is correctly scoped per object.

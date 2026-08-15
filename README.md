@@ -91,11 +91,6 @@ one analysis-ready view. See docs/ARCHITECTURE.md for the full pipeline diagram.
   due to informal rural location descriptions, zone-level addresses, or genuinely 
   missing street addresses in the source data itself, not a tooling gap. See 
   ADR-008 for the full breakdown.
-- Multi-object Aktenzeichen cases (e.g. an apartment sold alongside several 
-  parking spaces under one court case) can have objects at different lifecycle 
-  stages simultaneously. Status is tracked and displayed per-object (via 
-  status_title), not per-case; listing_status_events remains case-level and is 
-  used only for anomaly detection, not for object-level display (see ADR-010).
 - Zuschlag-type listing pages use several different real HTML structures for 
   Grundbuch/EZ/BLNr/address data (plain prose, empty-labeled div.row blocks, 
   single-object and multi-BLNr-bundle variants), each handled by dedicated 

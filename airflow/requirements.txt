@@ -6,3 +6,4 @@ requests==2.34.2
 google-cloud-bigquery
 dbt-bigquery
 jinja2>=3.1.5,<3.2.0
+click==8.2.1
