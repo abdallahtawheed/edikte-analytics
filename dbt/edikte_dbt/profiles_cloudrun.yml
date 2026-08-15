@@ -1,0 +1,10 @@
+edikte_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: edikte-analytics-2026
+      dataset: edikte_analytics_dbt
+      location: europe-west3
+      threads: 4

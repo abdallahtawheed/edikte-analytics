@@ -11,5 +11,6 @@ COPY src/ ./src/
 COPY run_scrape.py .
 COPY run_pipeline.py .
 COPY dbt/edikte_dbt ./dbt/edikte_dbt
+RUN cp ./dbt/edikte_dbt/profiles_cloudrun.yml ./dbt/edikte_dbt/profiles.yml
 
 ENV PYTHONPATH=/app/src
