@@ -308,7 +308,7 @@ pending the eventual LLM-based approach.
 ## ADR-012: LocalExecutor instead of CeleryExecutor for Airflow orchestration
 
 **Date:** 2026-08-13
-**Status:** Accepted
+**Status:** Superseded, see update below
 
 **Context:** Adding a fourth pipeline task (dbt) triggered a full Airflow image 
 rebuild, after which the Celery worker container crashed on every startup with 
@@ -346,8 +346,6 @@ ever needs true distributed execution (e.g. a genuinely production, multi-node
 deployment), CeleryExecutor would need to be revisited, ideally on a Linux host 
 where this bug does not appear to manifest.
 
-## ADR-012 (REVISED): CeleryExecutor restored after identifying root cause
-
 **Update, 2026-08-14:** The original diagnosis (Windows/Docker Desktop hostname 
 resolution) was incorrect. Migrating to native Linux reproduced the identical 
 crash, ruling out platform-specific causes. Root cause identified: a breaking 
@@ -361,6 +359,7 @@ workaround.
 ## OPEN ITEM: BLNr as the true unit of analysis, not source_url/page
 
 **Raised:** 2026-08-13
+**status:** Superseded, see update below
 
 Confirmed BLNr, not the page/source_url, is the actual legally purchasable/
 biddable unit. Current schema and all downstream views (objects_current, 
@@ -382,6 +381,32 @@ Stopgap in place for now: BLNr and a bundle-indicator flag surfaced in Streamlit
 table, so bundled listings are at least visible, not silently misrepresented as 
 single units. Full rework deferred, scoped as a dedicated future task rather than 
 folded into ongoing feature work. fixing it also would absorb on the grain for listing_status_events
+
+**Update, 2026-08-15 (final):** Investigated whether BLNr could serve as a 
+stable per-object identity key, either for price attribution or for tracking 
+an object across lifecycle-stage URL changes. Found real counter-evidence 
+against both:
+
+Price attribution: source site does not publish per-unit pricing for bundled 
+sales (14.06% of parcels), so no schema change can recover per-unit prices 
+that were never captured. Resolved via mart_price_history gaining is_bundled/
+unit_count features instead of a schema rework.
+
+Cross-lifecycle tracking: initially found one case (Stubenring, Wohnungseigentum-
+style) where BLNr appeared stable across an object's Versteigerung and Zuschlag 
+pages. However, a second real example (Kukmirn, land-parcel/"Gruppe"-style 
+listings) shows the same BLNr value repeated across multiple genuinely distinct 
+listings under one Aktenzeichen, confirming BLNr is not reliably unique even 
+within a single lifecycle stage for this listing type, let alone stable across 
+stages. No field observed in the data (BLNr, Grundstücksnr, or combinations) 
+reliably identifies "the same real object" across its different-URL lifecycle 
+stages across all listing type variants.
+
+**Final decision:** No BLNr-grain schema rework, no case_links repurposing. 
+source_url remains the correct, most reliable available key (per ADR-007, 
+ADR-013). Cross-lifecycle object tracking is an accepted, documented 
+limitation with no clear, reliable fix given the data source's actual 
+structure, not an unaddressed engineering gap.
 
 ## OPEN ITEM: listing_status_events tracked per-case, not per-object (elevates ADR-010's original gap)
 
