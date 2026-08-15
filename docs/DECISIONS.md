@@ -388,24 +388,36 @@ an object across lifecycle-stage URL changes. Found real counter-evidence
 against both:
 
 Price attribution: source site does not publish per-unit pricing for bundled 
-sales (14.06% of parcels), so no schema change can recover per-unit prices 
-that were never captured. Resolved via mart_price_history gaining is_bundled/
-unit_count features instead of a schema rework.
+sales (14.06% of parcels, 172/1223, confirmed genuinely bundled via regex 
+distinguishing multi-unit lists from fractional-share notation). Confirmed 
+directly via a real Zuschlag page (244 E 50/26y, "BLNr. 9; 36", one Meistbot 
+of 216.000,00 EUR covering both units), no schema change can recover a 
+per-unit price that was never captured on the source page. Resolved via 
+mart_price_history gaining is_bundled and unit_count features, with 
+meistbot_per_unit_estimate dividing the shared price only when genuinely 
+bundled, rather than a schema rework.
 
-Cross-lifecycle tracking: initially found one case (Stubenring, Wohnungseigentum-
-style) where BLNr appeared stable across an object's Versteigerung and Zuschlag 
-pages. However, a second real example (Kukmirn, land-parcel/"Gruppe"-style 
-listings) shows the same BLNr value repeated across multiple genuinely distinct 
-listings under one Aktenzeichen, confirming BLNr is not reliably unique even 
-within a single lifecycle stage for this listing type, let alone stable across 
-stages. No field observed in the data (BLNr, Grundstücksnr, or combinations) 
-reliably identifies "the same real object" across its different-URL lifecycle 
-stages across all listing type variants.
+Cross-lifecycle tracking: initially found one case (Tux/Zell am Ziller, 
+Wohnungseigentum-style, aktenzeichen 4 E 2018/24y) where BLNr appeared stable 
+and unique per real object across its own lifecycle. However, a second real 
+example (Kukmirn, aktenzeichen 6 E 5/26m, agricultural land sold "nach 
+Gruppen" rather than by EZ) shows the same BLNr value ("5, 6") repeated 
+across multiple genuinely distinct, separately-priced listings under one 
+Aktenzeichen. This confirms BLNr's meaning is not uniform across listing 
+categories: a true unique per-unit key for Wohnungseigentum, but a shared 
+ownership-group reference (not a unique object identifier) for land parcels 
+sold by Gruppe. No field observed in the data reliably identifies "the same 
+real object" across lifecycle-stage URL changes across all listing type 
+variants, without category-specific parsing logic not yet built or verified 
+against enough real examples to trust.
 
-**Final decision:** No BLNr-grain schema rework, no case_links repurposing. 
+**Final decision:** No BLNr-grain schema rework, no case_links repurposing 
+(case_links was designed for cross-Aktenzeichen relationships; real "Alle 
+Edikte zum Fall" examples observed so far only ever link objects already 
+sharing one Aktenzeichen, so this relationship may not occur in practice). 
 source_url remains the correct, most reliable available key (per ADR-007, 
-ADR-013). Cross-lifecycle object tracking is an accepted, documented 
-limitation with no clear, reliable fix given the data source's actual 
+ADR-013). Cross-lifecycle object tracking beyond what source_url already 
+provides is an accepted, documented limitation given the data source's actual 
 structure, not an unaddressed engineering gap.
 
 ## OPEN ITEM: listing_status_events tracked per-case, not per-object (elevates ADR-010's original gap)

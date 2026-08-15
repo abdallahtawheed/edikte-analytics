@@ -1,10 +1,14 @@
 -- NOTE: operates at source_url (page) grain, not BLNr. Bundled-BLNr pages
 -- (e.g. an apartment sold with several parking spaces) show one combined
 -- price across multiple units, since the source site does not publish
--- per-unit pricing for bundles. Rather than split rows (which would
--- duplicate an unsplittable price and degrade model quality), bundling is
--- surfaced as explicit features (is_bundled, unit_count) so a model can
--- learn from it honestly. See DECISIONS.md for full reasoning.
+-- per-unit pricing for bundles. Confirmed via real example 244 E 50/26y
+-- ("BLNr. 9; 36", one shared Meistbot). Bundling detection handles comma,
+-- dash, "und"/"u.", and semicolon delimiters, and excludes fractional-share
+-- notation (Anteil/Hälfteanteil/entspricht), which is a separate, 
+-- non-bundled case. meistbot_per_unit_estimate only divides the price when
+-- is_bundled is true; unit_count alone (multiple historical BLNr values for
+-- non-bundled, separately-paged objects) does not trigger division. See
+-- DECISIONS.md BLNr open item for full investigation and reasoning.
 
 WITH pre_auction AS (
     SELECT

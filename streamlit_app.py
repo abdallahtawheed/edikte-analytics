@@ -14,31 +14,8 @@ st.set_page_config(page_title="edikte-analytics", layout="wide")
 st.title("Austrian Judicial Auction Listings")
 
 
-@st.cache_data(ttl=300)
-def load_objects():
-    with engine.connect() as conn:
-        result = conn.execute(text("""
-            SELECT
-                oc.snapshot_id, oc.aktenzeichen, oc.source_url, oc.status_title, oc.kategorie,
-                oc.ort, oc.plz, oc.dienststelle, oc.scraped_at, oc.bekannt_gemacht_am,
-                oc.latitude, oc.longitude, oc.objektgroesse_m2, oc.blnr,
-                oc.schaetzwert, oc.geringstes_gebot, oc.meistbot,
-                oc.extra->>'Liegenschaftsadresse' as adresse,
-                (SELECT count(*) FROM listing_flags f WHERE f.snapshot_id = oc.snapshot_id) as flag_count
-            FROM objects_current oc
-        """))
-        df = pd.DataFrame(result.fetchall(), columns=result.keys())
+from streamlit_utils import load_objects
 
-    df["latitude"] = pd.to_numeric(df["latitude"], errors="coerce")
-    df["longitude"] = pd.to_numeric(df["longitude"], errors="coerce")
-    df["objektgroesse_m2"] = pd.to_numeric(df["objektgroesse_m2"], errors="coerce")
-    df["is_bundled"] = df["blnr"].fillna("").str.contains(",")
-    df["schaetzwert"] = pd.to_numeric(df["schaetzwert"], errors="coerce")
-    df["geringstes_gebot"] = pd.to_numeric(df["geringstes_gebot"], errors="coerce")
-    df["meistbot"] = pd.to_numeric(df["meistbot"], errors="coerce")
-    df["status"] = df["status_title"].apply(classify_status)
-
-    return df
 
 df = load_objects()
 
@@ -156,6 +133,24 @@ if not map_data.empty:
     st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=view_state, tooltip={"text": "{tooltip_text}"}, map_style="light"))
 else:
     st.info("No geocoded objects match the current filters.")
+
+
+if selected_row is not None:
+    with engine.connect() as conn:
+        photos = conn.execute(
+            text("""
+                SELECT storage_path FROM listing_documents
+                WHERE aktenzeichen = :ak AND doc_type = 'Foto(s)'
+            """),
+            {"ak": selected_row["aktenzeichen"]},
+        ).fetchall()
+
+    if photos:
+        st.subheader("Photos")
+        cols = st.columns(min(len(photos), 4))
+        for i, photo in enumerate(photos):
+            with cols[i % 4]:
+                st.image(photo.storage_path, use_container_width=True)
 
 
 # --- Detail view ---
