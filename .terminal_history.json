@@ -704,7 +704,110 @@
       "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
       "timestamp": 1787000344433,
       "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git add --all",
+      "timestamp": 1787016980552,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git status",
+      "timestamp": 1787016982188,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git commit -m\"\n> added a variety of QOL fixes\n> added more documentation (SLA, Runbook, corrections and extra details)\n> created the file for training price model and added it to the workflow\n> added postmortem\n> \"",
+      "timestamp": 1787017141601,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git push",
+      "timestamp": 1787017145931,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "uv run python run_scrape.py",
+      "timestamp": 1787023581960,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1787023627522,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "grep -n \"def insert_snapshot\" src/scraper/persist.py",
+      "timestamp": 1787023703185,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "uv run python -c \"import sys; sys.path.insert(0, 'src'); from scraper import persist\"",
+      "timestamp": 1787023711010,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "sed -n '95,115p' src/scraper/persist.py",
+      "timestamp": 1787023873490,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1787023878974,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_z3moq5.sh\" && rm \"/tmp/wshist_z3moq5.sh\"; } 2>/dev/null",
+      "timestamp": 1787024030649,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "grep -n \"^def \" src/scraper/persist.py",
+      "timestamp": 1787024032363,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787024035231
+    },
+    {
+      "command": "uv run python run_scrape.py",
+      "timestamp": 1787024544404,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "uv run python src/parser/run_geocoding.py",
+      "timestamp": 1787024818808,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_9ie19j.sh\" && rm \"/tmp/wshist_9ie19j.sh\"; } 2>/dev/null",
+      "timestamp": 1787024869456,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787024873880
+    },
+    {
+      "command": "uv run python src/scraper/run_geocoding.py",
+      "timestamp": 1787024901738,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "uv run python src/scraper/sync_to_bigquery.py",
+      "timestamp": 1787024937322,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd dbt/edikte_dbt/",
+      "timestamp": 1787024948935,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "dbt run",
+      "timestamp": 1787024962123,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
     }
   ],
-  "lastUpdated": 1787000344433
+  "lastUpdated": 1787024962123
 }

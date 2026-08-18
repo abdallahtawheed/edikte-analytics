@@ -10,6 +10,8 @@ from scraper.state_machine import insert_status_event
 from parser.flags import scan_for_flags
 from scraper.persist import insert_snapshot, get_latest_content_hash, insert_parcel, insert_flags
 
+from logging_utils import log_event
+
 SINCE_DATE = "01.01.2020"  # effectively "everything available", per our plateau test
 DELAY_SECONDS = 1.0  # be a polite scraper against a government server, not just fast
 
@@ -58,7 +60,11 @@ def main():
 
     for i, url in enumerate(urls, 1):
         status = process_listing(url)
-        print(f"[{i}/{len(urls)}] {url.split('/')[-1][:20]}... -> {status}")
+
+        log_event("listing_processed",
+            index=i, total=len(urls),
+            url_id=url.split('/')[-1][:20],
+            status=status)
 
         if status.startswith("inserted"):
             results["inserted"] += 1
@@ -71,8 +77,7 @@ def main():
 
         time.sleep(DELAY_SECONDS)
 
-    print(f"\nDone. Inserted: {results['inserted']}, Unchanged: {results['unchanged']}, "
-          f"Skipped: {results['skipped']}, Errors: {results['error']}")
+    log_event("scrape_run_complete", **results)
 
 
 if __name__ == "__main__":
