@@ -25,6 +25,11 @@ def main():
     if result.returncode != 0:
         print(result.stderr)
         raise Exception("dbt run failed")
+    
+    print("=== PRICE MODEL TRAINING ===")
+    sys.path.insert(0, "src")
+    from model.train_price_model import main as train_model_main
+    train_model_main()
 
 if __name__ == "__main__":
     main()

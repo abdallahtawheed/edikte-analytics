@@ -10,8 +10,24 @@ from parser.parse import parse_de_number
 from scraper.state_machine import classify_status
 from parser.flags import FLAG_CATEGORIES
 
+
 st.set_page_config(page_title="edikte-analytics", layout="wide")
+
+import streamlit.components.v1 as components
+
+components.html("""
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-077L619PDR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NP2WS69SYR');
+</script>
+""", height=0)
+
 st.title("Austrian Judicial Auction Listings")
+
 
 
 from streamlit_utils import load_objects

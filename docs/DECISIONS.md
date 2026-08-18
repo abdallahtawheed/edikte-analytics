@@ -359,7 +359,7 @@ workaround.
 ## OPEN ITEM: BLNr as the true unit of analysis, not source_url/page
 
 **Raised:** 2026-08-13
-**status:** Superseded, see update below
+**status:** resolved
 
 Confirmed BLNr, not the page/source_url, is the actual legally purchasable/
 biddable unit. Current schema and all downstream views (objects_current, 

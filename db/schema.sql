@@ -140,9 +140,7 @@ ORDER BY s.aktenzeichen, s.scraped_at DESC, e.observed_at DESC;
 
 -- ============================================================
 -- View: latest known state per OBJECT (source_url-level), used
--- by Streamlit. Deliberately does NOT join listing_status_events,
--- since that table tracks status per Aktenzeichen (case), not per
--- object. A single case can have multiple objects at different
+-- by Streamlit. A single case can have multiple objects at different
 -- lifecycle stages simultaneously (some auctioned, some not), so
 -- joining case-level status here produced wrong/stale results for
 -- individual objects. Use status_title (already per-object,

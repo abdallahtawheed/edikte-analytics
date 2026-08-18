@@ -1,0 +1,710 @@
+{
+  "version": 1,
+  "workspacePath": "/home/dev-dream-pc/coding_projects/edikte-analytics",
+  "entries": [
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate^[[D",
+      "timestamp": 1786834613544,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1786834618660,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd ~/coding_projects/edikte-analytics\ndocker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .\ndocker push gcr.io/edikte-analytics-2026/streamlit-app\ngcloud run deploy edikte-analytics-dashboard \\\n  --image gcr.io/edikte-analytics-2026/streamlit-app \\\n  --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\\n  --region europe-west3 \\\n  --allow-unauthenticated \\\n  --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786834766971,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd ~/coding_projects/edikte-analytics\\ndocker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .\\ndocker push gcr.io/edikte-analytics-2026/streamlit-app\\ngcloud run deploy edikte-analytics-dashboard \\\\\\n --image gcr.io/edikte-analytics-2026/streamlit-app \\\\\\n --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\\\\\n --region europe-west3 \\\\\\n --allow-unauthenticated \\\\\\n --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786834801726,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/streamlit-app",
+      "timestamp": 1786834832792,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/streamlit-app \\\n> gcloud run deploy edikte-analytics-dashboard \\\n> --image gcr.io/edikte-analytics-2026/streamlit-app\\\n> --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com\\\n> --region europe-west3\\\n> --allow-unauthenticated\\\n> --set-secrets DB_PASSWORD=db-password:latest\"\n>\n>\n>\n>\n> ^C",
+      "timestamp": 1786835030594,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cat deploy/streamlit/Dockerfile",
+      "timestamp": 1786835037135,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "analytics$ cd ~/coding_projects/edikte-analytics\ndocker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .\ndocker push gcr.io/edikte-analytics-2026/streamlit-app\ngcloud run deploy edikte-analytics-dashboard \\\n  --image gcr.io/edikte-analytics-2026/streamlit-app \\\n  --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\\n  --region europe-west3 \\\n  --allow-unauthenticated \\\n  --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786835079739,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_jdhz9a.sh\" && rm \"/tmp/wshist_jdhz9a.sh\"; } 2>/dev/null",
+      "timestamp": 1786837274658,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1786837279033
+    },
+    {
+      "command": "gcloud alpha monitoring channels create \\\n  --display-name=\"Pipeline failure alerts\" \\\n  --type=email \\\n  --channel-labels=email_address=boudy1131@gmail.com",
+      "timestamp": 1786837320178,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring policies create \\\n  --display-name=\"Pipeline job failure\" \\\n  --condition-display-name=\"Cloud Run Job execution failed\" \\\n  --condition-filter='resource.type=\"cloud_run_job\" AND resource.labels.job_name=\"pipeline-job\" AND metric.type=\"run.googleapis.com/job/completed_execution_count\" AND metric.labels.result=\"failed\"' \\\n  --condition-threshold-value=0 \\\n  --condition-threshold-comparison=COMPARISON_GT \\\n  --condition-threshold-duration=0s \\\n  --notification-channels=\"<channel-id-from-step-1>^C",
+      "timestamp": 1786837422083,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring policies create --display-name=\"Pipeline job failure\" --condition-display-name=\"Cloud Run Job execution failed\" --condition-filter='resource.type=\"cloud_run_job\" AND resource.labels.job_name=\"pipeline-job\" AND metric.type=\"run.googleapis.com/job/completed_execution_count\" AND metric.labels.result=\"failed\"' --condition-threshold-value=0 --condition-threshold-comparison=COMPARISON_GT --condition-threshold-duration=0s --notification-channels=\"12541468644353251019\"",
+      "timestamp": 1786837447673,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cat > /tmp/pipeline_alert_policy.json <<'EOF'\n{\n  \"displayName\": \"Pipeline job failure\",\n  \"conditions\": [\n    {\n      \"displayName\": \"Cloud Run Job execution failed\",\n      \"conditionThreshold\": {\n        \"filter\": \"resource.type=\\\"cloud_run_job\\\" AND resource.labels.job_name=\\\"pipeline-job\\\" AND metric.type=\\\"run.googleapis.com/job/completed_execution_count\\\" AND metric.labels.result=\\\"failed\\\"\",\n        \"comparison\": \"COMPARISON_GT\",\n        \"thresholdValue\": 0,\n        \"duration\": \"0s\",\n        \"aggregations\": [\n          {\n            \"alignmentPeriod\": \"3600s\",\n            \"perSeriesAligner\": \"ALIGN_COUNT\",\n            \"crossSeriesReducer\": \"REDUCE_SUM\"\n          }\n        ]\n      }\n    }\n  ],\n  \"notificationChannels\": [\n    \"projects/edikte-analytics-2026/notificationChannels/12541468644353251019\"\n  ],\n  \"combiner\": \"OR\"\n}\nEOF",
+      "timestamp": 1786837506523,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring policies create --policy-from-file=/tmp/pipeline_alert_policy.json",
+      "timestamp": 1786837548031,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring policies list --filter=\"displayName='Pipeline job failure'\"",
+      "timestamp": 1786837570111,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd ~/coding_projects/edikte-analytics \\ docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app . \\ docker push gcr.io/edikte-analytics-2026/streamlit-app\\ngcloud run deploy edikte-analytics-dashboard \\  --image gcr.io/edikte-analytics-2026/streamlit-app \\  --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\  --region europe-west3 \\  --allow-unauthenticated \\  --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786838351320,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "~/coding_projects/edikte-analytics",
+      "timestamp": 1786838363207,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .",
+      "timestamp": 1786838373038,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/streamlit-app",
+      "timestamp": 1786838386530,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run deploy edikte-analytics-dashboard \\\n  --image gcr.io/edikte-analytics-2026/streamlit-app \\\n  --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\\n  --region europe-west3 \\\n  --allow-unauthenticated \\\n  --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786838424877,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app . docker push gcr.io/edikte-analytics-2026/streamlit-app gcloud run deploy edikte-analytics-dashboard \\  --image gcr.io/edikte-analytics-2026/streamlit-app \\  --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\  --region europe-west3 \\  --allow-unauthenticated \\  --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786838636965,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "DB_MODE=local uv run streamlit run streamlit_app.py",
+      "timestamp": 1786838681713,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd ~/coding_projects/edikte-analytics docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app . docker push gcr.io/edikte-analytics-2026/streamlit-app gcloud run deploy edikte-analytics-dashboard \\   --image gcr.io/edikte-analytics-2026/streamlit-app \\   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\   --region europe-west3 \\   --allow-unauthenticated \\   --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786838726178,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "DB_MODE=local uv run streamlit run streamlit_app.py",
+      "timestamp": 1786838755141,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .",
+      "timestamp": 1786838862955,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/streamlit-app",
+      "timestamp": 1786838891216,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run deploy edikte-analytics-dashboard \\   --image gcr.io/edikte-analytics-2026/streamlit-app \\   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\   --region europe-west3 \\   --allow-unauthenticated \\   --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786838908532,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run deploy edikte-analytics-dashboard \\\n  --image gcr.io/edikte-analytics-2026/streamlit-app \\\n  --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\\n  --region europe-west3 \\\n  --allow-unauthenticated \\\n  --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786838939768,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .",
+      "timestamp": 1786839060624,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/streamlit-app",
+      "timestamp": 1786839071430,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run deploy edikte-analytics-dashboard \\   --image gcr.io/edikte-analytics-2026/streamlit-app \\   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\   --region europe-west3 \\   --allow-unauthenticated \\   --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786839072836,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run deploy edikte-analytics-dashboard   --image gcr.io/edikte-analytics-2026/streamlit-app   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com   --region europe-west3   --allow-unauthenticated   --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786839111267,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1786839111828,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .",
+      "timestamp": 1786839505529,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/streamlit-app",
+      "timestamp": 1786839521179,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run deploy edikte-analytics-dashboard   --image gcr.io/edikte-analytics-2026/streamlit-app   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com   --region europe-west3   --allow-unauthenticated   --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786839540577,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud services enable dataplex.googleapis.com",
+      "timestamp": 1786839877134,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud dataplex lakes create edikte-analytics-lake \\\n  --location=europe-west3 \\\n  --display-name=\"Edikte Analytics\"",
+      "timestamp": 1786840016004,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud dataplex zones create raw-zone \\\n  --lake=edikte-analytics-lake \\\n  --location=europe-west3 \\\n  --display-name=\"Raw\" \\\n  --resource-location-type=SINGLE_REGION \\\n  --type=RAW\ngcloud dataplex zones create curated-zone \\\n  --lake=edikte-analytics-lake \\\n  --location=europe-west3 \\\n  --display-name=\"Curated (dbt marts)\" \\\n  --resource-location-type=SINGLE_REGION \\\n  --type=CURATED",
+      "timestamp": 1786840057055,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "dev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud dataplex assets create raw-bigquery-asset \\\n  --lake=edikte-analytics-lake \\\n  --zone=raw-zone \\\n  --location=europe-west3 \\\n  --display-name=\"Raw synced tables\" \\\n  --resource-type=BIGQUERY_DATASET \\\n  --resource-name=projects/edikte-analytics-2026/datasets/edikte_analytics \\\n  --discovery-enabled\ngcloud dataplex assets create marts-bigquery-asset \\\n  --lake=edikte-analytics-lake \\\n  --zone=curated-zone \\\n  --location=europe-west3 \\\n  --display-name=\"dbt staging and marts\" \\\n  --resource-type=BIGQUERY_DATASET \\\n  --resource-name=projects/edikte-analytics-2026/datasets/edikte_analytics_dbt \\\n  --discovery-enabled",
+      "timestamp": 1786840291450,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud dataplex assets list --lake=edikte-analytics-lake --zone=raw-zone --location=europe-west3\ngcloud dataplex assets list --lake=edikte-analytics-lake --zone=curated-zone --location=europe-west3",
+      "timestamp": 1786840304279,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "uv add scikit-learn joblib google-cloud-storage pandas-gbq",
+      "timestamp": 1786840844966,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "uv lock",
+      "timestamp": 1786840895875,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "uv sync",
+      "timestamp": 1786840898568,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "uv run python src/model/train_price_model.py",
+      "timestamp": 1786840937540,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/pipeline-jobs .",
+      "timestamp": 1786841138176,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/pipeline-jobs",
+      "timestamp": 1786841267426,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run jobs update pipeline-job --image gcr.io/edikte-analytics-2026/pipeline-jobs --region europe-west3",
+      "timestamp": 1786841284761,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud projects add-iam-policy-binding edikte-analytics-2026 \\\n  --member=\"serviceAccount:pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com\" \\\n  --role=\"roles/storage.objectAdmin\"",
+      "timestamp": 1786841392219,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run jobs execute pipeline-job --region europe-west3",
+      "timestamp": 1786841469713,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud scheduler jobs list --location=europe-west3",
+      "timestamp": 1786841552109,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud scheduler jobs describe pipeline-daily --location=europe-west3",
+      "timestamp": 1786841583146,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1786841594094,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud scheduler jobs describe pipeline-daily --location=europe-westgcloud run jobs executions describe pipeline-job-ntmm",
+      "timestamp": 1786841613342,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run jobs executions describe pipeline-job-ntmms",
+      "timestamp": 1786841627945,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read \"resource.type=cloud_run_job AND resource.labels.job_name=pipeline-job AND labels.\\\"run.googleapis.com/execution_name\\\"=\\\"pipeline-job-ntmms\\\" AND severity>=ERROR\" --limit 50 --format \"value(textPayload)\"",
+      "timestamp": 1786841736091,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read \"resource.type=cloud_run_job AND resource.labels.job_name=pipeline-job AND labels.\\\"run.googleapis.com/execution_name\\\"=\\\"pipeline-job-ntmms\\\"\" --limit 300 --format \"value(textPayload)\" --order asc | tail -100",
+      "timestamp": 1786841807455,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cat deploy/pipeline/Dockerfile",
+      "timestamp": 1786841851079,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker images gcr.io/edikte-analytics-2026/pipeline-jobs",
+      "timestamp": 1786841896635,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "i",
+      "timestamp": 1786841902984,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/pipeline/Dockerfile -t gcr.io/edikte-analytics-2026/pipeline-jobs . --no-cache",
+      "timestamp": 1786842028347,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/pipeline-jobs",
+      "timestamp": 1786842432697,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run jobs update pipeline-job --image gcr.io/edikte-analytics-2026/pipeline-jobs --region europe-west3",
+      "timestamp": 1786842633510,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run jobs execute pipeline-job --region europe-west3",
+      "timestamp": 1786842702560,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "DB_MODE=local uv run streamlit run streamlit_app.py",
+      "timestamp": 1786861150291,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run regions list",
+      "timestamp": 1786865100881,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud compute zones list | grep -E \"(us|europe|asia)\" | head -n 5",
+      "timestamp": 1786865119590,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "=> => transferring dockerfile: 358B                                                                       0.0s\n => [internal] load metadata for docker.io/library/python:3.12-slim                                        0.5s\n => [internal] load .dockerignore                                                                          0.0s\n => => transferring context: 145B                                                                          0.0s\n => [1/7] FROM docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a036  0.0s\n => => resolve docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a036  0.0s\n => [internal] load build context                                                                          0.0s\n => => transferring context: 9.50kB                                                                        0.0s\n => CACHED [2/7] WORKDIR /app                                                                              0.0s\n => CACHED [3/7] COPY pyproject.toml uv.lock ./                                                            0.0s\n => CACHED [4/7] RUN pip install uv && uv sync --frozen --no-dev                                           0.0s\n => CACHED [5/7] COPY src/ ./src/                                                                          0.0s\n => [6/7] COPY streamlit_app.py .                                                                          0.0s\n => [7/7] COPY pages/ ./pages/                                                                             0.0s\n => exporting to image                                                                                     0.1s\n => => exporting layers                                                                                    0.1s\n => => exporting manifest sha256:a9c09a4e5e0765bacef68cfcdce756a620246640f702a4214f6b5040ce379014          0.0s\n => => exporting config sha256:048f08a5134283145d203cff71b51f7fc1063ab77f8092d9fed86b629776e69f            0.0s\n => => exporting attestation manifest sha256:c337f770c7e9187f9ad7a370448e8f46295c8753347ec3e6af94679d0244  0.0s\n => => exporting manifest list sha256:4e8074d879cd642f6675a0f1ee76a23f7d2b4c5423b57fcc8f846894dc991d55     0.0s\n => => naming to gcr.io/edikte-analytics-2026/streamlit-app:latest                                         0.0s\n => => unpacking to gcr.io/edikte-analytics-2026/streamlit-app:latest                                      0.0s\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker push gcr.io/edikte-analytics-2026/streamlit-app\nUsing default tag: latest\nThe push refers to repository [gcr.io/edikte-analytics-2026/streamlit-app]\n87a8cbe3ec4c: Pushed\n44136fa355b3: Already exists\nfa18dfb1257a: Layer already exists\n26c307b5e35a: Layer already exists\nb952fe9f6810: Layer already exists\n6760bfe2ff00: Layer already exists\n03be8de7b4b8: Layer already exists\nf8c44325b439: Layer already exists\n473537c66cdc: Layer already exists\na118b970c9d7: Layer already exists\nbe305cae1223: Pushed\nb60668b3f676: Pushed\nlatest: digest: sha256:4e8074d879cd642f6675a0f1ee76a23f7d2b4c5423b57fcc8f846894dc991d55 size: 856\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run deploy edikte-analytics-dashboard \\   --image gcr.io/edikte-analytics-2026/streamlit-app \\   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\   --region europe-west3 \\   --allow-unauthenticated \\   --set-secrets DB_PASSWORD=db-password:latest\nERROR: (gcloud.run.deploy) unrecognized arguments:\nTo search the help text of gcloud commands, run:\n  gcloud help -- SEARCH_TERMS\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run deploy edikte-analytics-dashboard \\   --image gcr.io/edikte-analytics-2026/streamlit-app \\   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\   --region europe-west3 \\   --allow-unauthenticated \\   --set-secrets DB_PASSWORD=db-password:latest\nERROR: (gcloud.run.deploy) unrecognized arguments:\nTo search the help text of gcloud commands, run:\n  gcloud help -- SEARCH_TERMS\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run deploy edikte-analytics-dashboard   --image gcr.io/edikte-analytics-2026/streamlit-app   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com   --region europe-west3   --allow-unauthenticated   --set-secrets DB_PASSWORD=db-password:latest\nDeploying container to Cloud Run service [edikte-analytics-dashboard] in project [edikte-analytics-2026] region [europe-west3]\n✓ Deploying... Done.\n  ✓ Creating Revision...\n  ✓ Routing traffic...\n  ✓ Setting IAM Policy...\nDone.\nService [edikte-analytics-dashboard] revision [edikte-analytics-dashboard-00013-z4q] has been deployed and is serving 100 percent of traffic.\nService URL: https://edikte-analytics-dashboard-523082904080.europe-west3.run.app\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ ^C\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .\n[+] Building 1.2s (12/12) FINISHED                                                               docker:default\n => [internal] load build definition from Dockerfile                                                       0.0s\n => => transferring dockerfile: 358B                                                                       0.0s\n => [internal] load metadata for docker.io/library/python:3.12-slim                                        0.9s\n => [internal] load .dockerignore                                                                          0.0s\n => => transferring context: 145B                                                                          0.0s\n => [internal] load build context                                                                          0.0s\n => => transferring context: 9.50kB                                                                        0.0s\n => [1/7] FROM docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a036  0.0s\n => => resolve docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a036  0.0s\n => CACHED [2/7] WORKDIR /app                                                                              0.0s\n => CACHED [3/7] COPY pyproject.toml uv.lock ./                                                            0.0s\n => CACHED [4/7] RUN pip install uv && uv sync --frozen --no-dev                                           0.0s\n => CACHED [5/7] COPY src/ ./src/                                                                          0.0s\n => [6/7] COPY streamlit_app.py .                                                                          0.1s\n => [7/7] COPY pages/ ./pages/                                                                             0.0s\n => exporting to image                                                                                     0.1s\n => => exporting layers                                                                                    0.1s\n => => exporting manifest sha256:4612ffb5d19dd9b31f801eb831257ee4f646b2361cf1c33e117fe326bd21f030          0.0s\n => => exporting config sha256:07c2a029656cbb3d934e4b5dc607b62c14b284504ec3e6a689724a3e2a6f356d            0.0s\n => => exporting attestation manifest sha256:4c5a3b94cb7907f75f36e9e770d4182c86fcc4126f505b6f6783d3cb355b  0.0s\n => => exporting manifest list sha256:4b61535e24fb30208ac801f2f477ea13af28c60a3fe0c991de5d256a01cd1a5e     0.0s\n => => naming to gcr.io/edikte-analytics-2026/streamlit-app:latest                                         0.0s\n => => unpacking to gcr.io/edikte-analytics-2026/streamlit-app:latest                                      0.0s\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .\n[+] Building 0.3s (12/12) FINISHED                                                               docker:default\n => [internal] load build definition from Dockerfile                                                       0.0s\n => => transferring dockerfile: 358B                                                                       0.0s\n => [internal] load metadata for docker.io/library/python:3.12-slim                                        0.2s\n => [internal] load .dockerignore                                                                          0.0s\n => => transferring context: 145B                                                                          0.0s\n => [1/7] FROM docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a036  0.0s\n => => resolve docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a036  0.0s\n => [internal] load build context                                                                          0.0s\n => => transferring context: 1.54kB                                                                        0.0s\n => CACHED [2/7] WORKDIR /app                                                                              0.0s\n => CACHED [3/7] COPY pyproject.toml uv.lock ./                                                            0.0s\n => CACHED [4/7] RUN pip install uv && uv sync --frozen --no-dev                                           0.0s\n => CACHED [5/7] COPY src/ ./src/                                                                          0.0s\n => CACHED [6/7] COPY streamlit_app.py .                                                                   0.0s\n => CACHED [7/7] COPY pages/ ./pages/                                                                      0.0s\n => exporting to image                                                                                     0.0s\n => => exporting layers                                                                                    0.0s\n => => exporting manifest sha256:4612ffb5d19dd9b31f801eb831257ee4f646b2361cf1c33e117fe326bd21f030          0.0s\n => => exporting config sha256:07c2a029656cbb3d934e4b5dc607b62c14b284504ec3e6a689724a3e2a6f356d            0.0s\n => => exporting attestation manifest sha256:9c97a93b119788814ec6da23bba3f83042f7d1138ab0d2bef2a3838d9eaa  0.0s\n => => exporting manifest list sha256:0d1f44359753bf8ddb674bd972328829795dc5f347e4e1aa83f3aef17cf939b9     0.0s\n => => naming to gcr.io/edikte-analytics-2026/streamlit-app:latest                                         0.0s\n => => unpacking to gcr.io/edikte-analytics-2026/streamlit-app:latest                                      0.0s\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker push gcr.io/edikte-analytics-2026/streamlit-app\nUsing default tag: latest\nThe push refers to repository [gcr.io/edikte-analytics-2026/streamlit-app]\n26c307b5e35a: Layer already exists\n3f2ffdbf251a: Pushed\n44136fa355b3: Already exists\nfa18dfb1257a: Layer already exists\nb952fe9f6810: Layer already exists\n6760bfe2ff00: Layer already exists\n473537c66cdc: Layer already exists\nf8c44325b439: Layer already exists\n03be8de7b4b8: Layer already exists\na118b970c9d7: Layer already exists\n756d8b255a0e: Pushed\n883fdae0cd02: Pushed\nlatest: digest: sha256:0d1f44359753bf8ddb674bd972328829795dc5f347e4e1aa83f3aef17cf939b9 size: 856\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run deploy edikte-analytics-dashboard   --image gcr.io/edikte-analytics-2026/streamlit-app   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com   --region europe-west3   --allow-unauthenticated   --set-secrets DB_PASSWORD=db-password:latest\nDeploying container to Cloud Run service [edikte-analytics-dashboard] in project [edikte-analytics-2026] region [europe-west3]\n✓ Deploying... Done.\n  ✓ Creating Revision...\n  ✓ Routing traffic...\n  ✓ Setting IAM Policy...\nDone.\nService [edikte-analytics-dashboard] revision [edikte-analytics-dashboard-00014-q94] has been deployed and is serving 100 percent of traffic.\nService URL: https://edikte-analytics-dashboard-523082904080.europe-west3.run.app\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud services enable dataplex.googleapis.com\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud dataplex lakes create edikte-analytics-lake \\\n  --location=europe-west3 \\\n  --display-name=\"Edikte Analytics\"\nWaiting for [projects/edikte-analytics-2026/locations/europe-west3/operations/operation-1786839882114-6591f1471\na5b4-171c6936-8b70cd02] to finish...done.\nCreated [edikte-analytics-lake] Lake created in [projects/edikte-analytics-2026/locations/europe-west3].\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud dataplex zones create raw-zone \\\n  --lake=edikte-analytics-lake \\\n  --location=europe-west3 \\\n  --display-name=\"Raw\" \\\n  --resource-location-type=SINGLE_REGION \\\n  --type=RAW\ngcloud dataplex zones create curated-zone \\\n  --lake=edikte-analytics-lake \\\n  --location=europe-west3 \\\n  --display-name=\"Curated (dbt marts)\" \\\n  --resource-location-type=SINGLE_REGION \\\n  --type=CURATED\nWaiting for [projects/edikte-analytics-2026/locations/europe-west3/operations/operation-1786840040002-6591f1dda\nd494-a511eb17-ce5c1841] to finish...done.\nCreated [raw-zone] Zone created in [projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake].\nWaiting for [projects/edikte-analytics-2026/locations/europe-west3/operations/operation-1786840048610-6591f1e5e\n2d5d-756fdbec-1166d3b2] to finish...done.\nCreated [curated-zone] Zone created in [projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake].\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud dataplex assets create raw-bigquery-asset \\\n  --lake=edikte-analytics-lake \\\n  --zone=raw-zone \\\n  --location=europe-west3 \\\n  --display-name=\"Raw synced tables\" \\\n  --resource-type=BIGQUERY_DATASET \\\n  --resource-name=projects/edikte-analytics-2026/datasets/edikte_analytics \\\n  --discovery-enabled\ngcloud dataplex assets create marts-bigquery-asset \\\n  --lake=edikte-analytics-lake \\\n  --zone=curated-zone \\\n  --location=europe-west3 \\\n  --display-name=\"dbt staging and marts\" \\\n  --resource-type=BIGQUERY_DATASET \\\n  --resource-name=projects/edikte-analytics-2026/datasets/edikte_analytics_dbt \\\n  --discovery-enabled\nWaiting for [projects/edikte-analytics-2026/locations/europe-west3/operations/operation-1786840208965-6591f27ec\nff13-fe78de25-6c3516ee] to finish...done.\nCreated [raw-bigquery-asset] Asset created in [projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake/zones/raw-zone].\nWaiting for [projects/edikte-analytics-2026/locations/europe-west3/operations/operation-1786840250610-6591f2a68\n727f-2b3de948-ea3b3f40] to finish...done.\nCreated [marts-bigquery-asset] Asset created in [projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake/zones/curated-zone].\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud dataplex assets list --lake=edikte-analytics-lake --zone=raw-zone --location=europe-west3\ngcloud dataplex assets list --lake=edikte-analytics-lake --zone=curated-zone --location=europe-west3\nNAME                DISPLAY_NAME       ASSET_STATUS  DISCOVERY_ENABLED  DISCOVERY_STATUS  RESOURCE_NAME                                             RESOURCE_TYPE     RESOURCE_STATE  SECURITY_STATUS  LABELS\nraw-bigquery-asset  Raw synced tables  ACTIVE        True               SCHEDULED         projects/edikte-analytics-2026/datasets/edikte_analytics  BIGQUERY_DATASET  READY           READY\nNAME                  DISPLAY_NAME           ASSET_STATUS  DISCOVERY_ENABLED  DISCOVERY_STATUS  RESOURCE_NAME                                                 RESOURCE_TYPE     RESOURCE_STATE  SECURITY_STATUS  LABELS\nmarts-bigquery-asset  dbt staging and marts  ACTIVE        True               SCHEDULED         projects/edikte-analytics-2026/datasets/edikte_analytics_dbt  BIGQUERY_DATASET  READY           READY\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ uv add scikit-learn joblib google-cloud-storage pandas-gbq\nResolved 156 packages in 1.71s\nPrepared 4 packages in 2.73s\nInstalled 4 packages in 39ms\n + joblib==1.5.3\n + scikit-learn==1.9.0\n + scipy==1.18.0\n + threadpoolctl==3.6.0\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ uv lock\nResolved 156 packages in 1ms\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ uv sync\nResolved 156 packages in 0.80ms\nChecked 154 packages in 4ms\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ uv run python src/model/train_price_model.py\n/home/dev-dream-pc/coding_projects/edikte-analytics/.venv/lib/python3.12/site-packages/google/cloud/bigquery/table.py:2082: UserWarning: BigQuery Storage module not found, fetch data with the REST endpoint instead.\n  warnings.warn(\nLoaded 4 training rows from mart_price_history.\nSkipping training: Only 4 rows available, need at least 20 to train meaningfully.\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/pipeline-jobs .\n[+] Building 60.8s (12/12) FINISHED                                                              docker:default\n => [internal] load build definition from Dockerfile                                                       0.0s\n => => transferring dockerfile: 358B                                                                       0.0s\n => [internal] load metadata for docker.io/library/python:3.12-slim                                        1.0s\n => [internal] load .dockerignore                                                                          0.0s\n => => transferring context: 145B                                                                          0.0s\n => [1/7] FROM docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a036  0.0s\n => => resolve docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a036  0.0s\n => [internal] load build context                                                                          0.0s\n => => transferring context: 595.59kB                                                                      0.0s\n => CACHED [2/7] WORKDIR /app                                                                              0.0s\n => [3/7] COPY pyproject.toml uv.lock ./                                                                   0.1s\n => [4/7] RUN pip install uv && uv sync --frozen --no-dev                                                 25.2s\n => [5/7] COPY src/ ./src/                                                                                 0.2s\n => [6/7] COPY streamlit_app.py .                                                                          0.0s\n => [7/7] COPY pages/ ./pages/                                                                             0.0s\n => exporting to image                                                                                    34.1s\n => => exporting layers                                                                                   28.2s\n => => exporting manifest sha256:bf133a9495afa967879156c0ff82bb37b7b62dd8eb3f7f0937ce907e168cd815          0.0s\n => => exporting config sha256:164463ef29cd3463563e81a3eabd54dbf3f931153f9c2595f72e2187b077091b            0.0s\n => => exporting attestation manifest sha256:0a884022febba3c83027810dea5b2b09cae5791057e09b13864dc1a482b1  0.0s\n => => exporting manifest list sha256:d2f8021990373ef8a0aa62738d20893dd9f3ea515d4d98f6534cb5c3dba4962e     0.0s\n => => naming to gcr.io/edikte-analytics-2026/pipeline-jobs:latest                                         0.0s\n => => unpacking to gcr.io/edikte-analytics-2026/pipeline-jobs:latest                                      5.9s\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker push gcr.io/edikte-analytics-2026/pipeline-jobs\nUsing default tag: latest\nThe push refers to repository [gcr.io/edikte-analytics-2026/pipeline-jobs]\n26c307b5e35a: Layer already exists\nf2fbdd2e88f2: Pushed\n44136fa355b3: Already exists\nfa18dfb1257a: Layer already exists\nb952fe9f6810: Layer already exists\n6760bfe2ff00: Layer already exists\n03be8de7b4b8: Layer already exists\n501c75cb10d4: Pushed\na66d9cb45659: Pushed\nce3f78b586a8: Pushed\ndfe0a5713fb5: Pushed\n0cd8859fd263: Pushed\nlatest: digest: sha256:d2f8021990373ef8a0aa62738d20893dd9f3ea515d4d98f6534cb5c3dba4962e size: 856\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run jobs update pipeline-job --image gcr.io/edikte-analytics-2026/pipeline-jobs --region europe-west3\nUpdating Cloud Run job [pipeline-job] in project [edikte-analytics-2026] region [europe-west3]\n✓ Updating job... Done.\nDone.\nJob [pipeline-job] has successfully been updated.\nTo execute this job, use:\ngcloud run jobs execute pipeline-job\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud projects add-iam-policy-binding edikte-analytics-2026 \\\n  --member=\"serviceAccount:pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com\" \\\n  --role=\"roles/storage.objectAdmin\"\nUpdated IAM policy for project [edikte-analytics-2026].\nbindings:\n- members:\n  - serviceAccount:service-523082904080@gcp-sa-artifactregistry.iam.gserviceaccount.com\n  role: roles/artifactregistry.serviceAgent\n- members:\n  - serviceAccount:airflow-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  - serviceAccount:pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  role: roles/bigquery.dataEditor\n- members:\n  - serviceAccount:airflow-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  - serviceAccount:pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  role: roles/bigquery.jobUser\n- members:\n  - serviceAccount:523082904080@cloudbuild.gserviceaccount.com\n  role: roles/cloudbuild.builds.builder\n- members:\n  - serviceAccount:service-523082904080@gcp-sa-cloudbuild.iam.gserviceaccount.com\n  role: roles/cloudbuild.serviceAgent\n- members:\n  - serviceAccount:service-523082904080@gcp-sa-cloudscheduler.iam.gserviceaccount.com\n  role: roles/cloudscheduler.serviceAgent\n- members:\n  - serviceAccount:airflow-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  - serviceAccount:pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  - serviceAccount:streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  role: roles/cloudsql.client\n- members:\n  - serviceAccount:service-523082904080@containerregistry.iam.gserviceaccount.com\n  role: roles/containerregistry.ServiceAgent\n- members:\n  - serviceAccount:service-523082904080@gcp-sa-dataplex.iam.gserviceaccount.com\n  role: roles/dataplex.serviceAgent\n- members:\n  - serviceAccount:523082904080-compute@developer.gserviceaccount.com\n  role: roles/editor\n- members:\n  - user:Boudy1131@gmail.com\n  role: roles/owner\n- members:\n  - serviceAccount:service-523082904080@gcp-sa-pubsub.iam.gserviceaccount.com\n  role: roles/pubsub.serviceAgent\n- members:\n  - serviceAccount:pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  role: roles/run.invoker\n- members:\n  - serviceAccount:service-523082904080@serverless-robot-prod.iam.gserviceaccount.com\n  role: roles/run.serviceAgent\n- members:\n  - serviceAccount:pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  role: roles/storage.objectAdmin\netag: BwZZH25woQI=\nversion: 1\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run jobs execute pipeline-job --region europe-west3\n✓ Creating execution... Done.\n  ✓ Provisioning resources... Provisioned imported containers.\nDone.\nExecution [pipeline-job-ntmms] has successfully started running.\nView details about this execution by running:\ngcloud run jobs executions describe pipeline-job-ntmms\nOr visit https://console.cloud.google.com/run/jobs/executions/details/europe-west3/pipeline-job-ntmms?project=523082904080\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud scheduler jobs list --location=europe-west3\nID              LOCATION      SCHEDULE (TZ)        TARGET_TYPE  STATE\npipeline-daily  europe-west3  0 2 * * * (Etc/UTC)  HTTP         ENABLED\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud scheduler jobs describe pipeline-daily --location=europe-west3\nattemptDeadline: 180s\nhttpTarget:\n  headers:\n    User-Agent: Google-Cloud-Scheduler\n  httpMethod: POST\n  oauthToken:\n    scope: https://www.googleapis.com/auth/cloud-platform\n    serviceAccountEmail: pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com\n  uri: https://europe-west3-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/edikte-analytics-2026/jobs/pipeline-job:run\nname: projects/edikte-analytics-2026/locations/europe-west3/jobs/pipeline-daily\nretryConfig:\n  maxBackoffDuration: 3600s\n  maxDoublings: 5\n  maxRetryDuration: 0s\n  minBackoffDuration: 5s\nschedule: 0 2 * * *\nscheduleTime: '2026-08-16T02:00:00Z'\nstate: ENABLED\nstatus:\n  code: -1\ntimeZone: Etc/UTC\nuserUpdateTime: '2026-08-15T03:35:27.220517Z'\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ ^C\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud scheduler jobs describe pipeline-daily --location=europe-westgcloud run jobs executions describe pipeline-job-ntmm\nERROR: (gcloud.scheduler.jobs.describe) unrecognized arguments:\n  run\n  jobs\n  executions\n  describe\n  pipeline-job-ntmm\n  To search the help text of gcloud commands, run:\n  gcloud help -- SEARCH_TERMS\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run jobs executions describe pipeline-job-ntmms\nPlease specify a region:\n [1] africa-south1\n [2] asia-east1\n [3] asia-east2\n [4] asia-northeast1\n [5] asia-northeast2\n [6] asia-northeast3\n [7] asia-south1\n [8] asia-south2\n [9] asia-southeast1\n [10] asia-southeast2\n [11] asia-southeast3\n [12] australia-southeast1\n [13] australia-southeast2\n [14] europe-central2\n [15] europe-north1\n [16] europe-north2\n [17] europe-southwest1\n [18] europe-west1\n [19] europe-west10\n [20] europe-west12\n [21] europe-west2\n [22] europe-west3\n [23] europe-west4\n [24] europe-west6\n [25] europe-west8\n [26] europe-west9\n [27] me-central1\n [28] me-central2\n [29] me-west1\n [30] northamerica-northeast1\n [31] northamerica-northeast2\n [32] northamerica-south1\n [33] southamerica-east1\n [34] southamerica-west1\n [35] us-central1\n [36] us-east1\n [37] us-east4\n [38] us-east5\n [39] us-south1\n [40] us-west1\n [41] us-west2\n [42] us-west3\n [43] us-west4\n [44] cancel\nPlease enter numeric choice or text value (must exactly match list item):  ^C\nCommand killed by keyboard interrupt\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run jobs executions describe pipeline-job-ntmms\nPlease specify a region:\n [1] africa-south1\n [2] asia-east1\n [3] asia-east2\n [4] asia-northeast1\n [5] asia-northeast2\n [6] asia-northeast3\n [7] asia-south1\n [8] asia-south2\n [9] asia-southeast1\n [10] asia-southeast2\n [11] asia-southeast3\n [12] australia-southeast1\n [13] australia-southeast2\n [14] europe-central2\n [15] europe-north1\n [16] europe-north2\n [17] europe-southwest1\n [18] europe-west1\n [19] europe-west10\n [20] europe-west12\n [21] europe-west2\n [22] europe-west3\n [23] europe-west4\n [24] europe-west6\n [25] europe-west8\n [26] europe-west9\n [27] me-central1\n [28] me-central2\n [29] me-west1\n [30] northamerica-northeast1\n [31] northamerica-northeast2\n [32] northamerica-south1\n [33] southamerica-east1\n [34] southamerica-west1\n [35] us-central1\n [36] us-east1\n [37] us-east4\n [38] us-east5\n [39] us-south1\n [40] us-west1\n [41] us-west2\n [42] us-west3\n [43] us-west4\n [44] cancel\nPlease enter numeric choice or text value (must exactly match list item):  22\nTo make this the default region, run `gcloud config set run/region europe-west3`.\nX Execution pipeline-job-ntmms in region europe-west3\n0 tasks completed successfully\n1 task failed to complete\nElapsed time: 1 minute and 18 seconds\n\nLog URI: https://console.cloud.google.com/logs/viewer?project=edikte-analytics-2026&advancedFilter=resource.type%3D%22cloud_run_job%22%0Aresource.labels.job_name%3D%22pipeline-job%22%0Aresource.labels.location%3D%22europe-west3%22%0Alabels.%22run.googleapis.com/execution_name%22%3D%22pipeline-job-ntmms%22\n\nTasks:           1\nParallelism:     1\nContainer None\n  Image:         gcr.io/edikte-analytics-2026/pipeline-jobs@sha256:bf133a9495afa967879156c0ff82bb37b7b62dd8eb3f7f0937ce907e168cd815\n  Command:       uv\n  Args:          run python run_pipeline.py\n  Memory:        512Mi\n  CPU:           1000m\n  Secrets:\n    DB_PASSWORD  db-password:latest\nTask Timeout:    2h\nMax Retries:     1\nService account: pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com\nX Task pipeline-job-ntmms-task0 failed with exit code: 2 and message: The container exited with an\nerror.\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud logging read \"resource.type=cloud_run_job AND resource.labels.job_name=pipeline-job AND labels.\\\"run.googleapis.com/execution_name\\\"=\\\"pipeline-job-ntmms\\\" AND severity>=ERROR\" --limit 50 --format \"value(textPayload)\"\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud logging read \"resource.type=cloud_run_job AND resource.labels.job_name=pipeline-job AND labels.\\\"run.googleapis.com/execution_name\\\"=\\\"pipeline-job-ntmms\\\"\" --limit 300 --format \"value(textPayload)\" --order asc | tail -100\nDownloading pygments (1.2MiB)\nDownloading virtualenv (5.2MiB)\nDownloading ruff (10.9MiB)\n Downloaded ruff\n Downloaded virtualenv\n Downloaded pygments\nInstalled 13 packages in 28ms\n/app/.venv/bin/python3: can't open file '/app/run_pipeline.py': [Errno 2] No such file or directory\nContainer called exit(2).\nDownloading pygments (1.2MiB)\nDownloading ruff (10.9MiB)\nDownloading virtualenv (5.2MiB)\n Downloaded ruff\n Downloaded virtualenv\n Downloaded pygments\nInstalled 13 packages in 28ms\n/app/.venv/bin/python3: can't open file '/app/run_pipeline.py': [Errno 2] No such file or directory\nContainer called exit(2).\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ cat deploy/pipeline/Dockerfile\nFROM python:3.12-slim\nWORKDIR /app\nCOPY pyproject.toml uv.lock ./\nRUN pip install uv && uv sync --frozen --no-dev\nRUN uv add dbt-bigquery\nCOPY src/ ./src/\nCOPY run_scrape.py .\nCOPY run_pipeline.py .\nCOPY dbt/edikte_dbt ./dbt/edikte_dbt\nRUN cp ./dbt/edikte_dbt/profiles_cloudrun.yml ./dbt/edikte_dbt/profiles.yml\nENV PYTHONPATH=/app/srcdev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ ls -la ls -la run_pipeline.py\n-rw-rw-r-- 1 dev-dream-pc dev-dream-pc 929 Aug 16 02:40 run_pipeline.py\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker images gcr.io/edikte-analytics-2026/pipeline-jobs\n                                                                                            i Info →   U  In Use\nIMAGE                                               ID             DISK USAGE   CONTENT SIZE   EXTRA\ngcr.io/edikte-analytics-2026/pipeline-jobs:latest   d2f802199037       1.66GB          407MB\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ i\ni: command not found\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker build -f deploy/pipeline/Dockerfile -t gcr.io/edikte-analytics-2026/pipeline-jobs . --no-cache\n[+] Building 59.4s (15/15) FINISHED                                                                  docker:default\n => [internal] load build definition from Dockerfile                                                           0.0s\n => => transferring dockerfile: 379B                                                                           0.0s\n => [internal] load metadata for docker.io/library/python:3.12-slim                                            1.0s\n => [internal] load .dockerignore                                                                              0.0s\n => => transferring context: 145B                                                                              0.0s\n => [internal] load build context                                                                              0.0s\n => => transferring context: 1.72MB                                                                            0.0s\n => [ 1/10] FROM docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a03642  0.0s\n => => resolve docker.io/library/python:3.12-slim@sha256:dd29372629eeba2dd003fd9e9d35a5b8236c44727875a0364254  0.0s\n => CACHED [ 2/10] WORKDIR /app                                                                                0.0s\n => [ 3/10] COPY pyproject.toml uv.lock ./                                                                     0.0s\n => [ 4/10] RUN pip install uv && uv sync --frozen --no-dev                                                   24.4s\n => [ 5/10] RUN uv add dbt-bigquery                                                                            0.4s\n => [ 6/10] COPY src/ ./src/                                                                                   0.0s\n => [ 7/10] COPY run_scrape.py .                                                                               0.0s\n => [ 8/10] COPY run_pipeline.py .                                                                             0.0s\n => [ 9/10] COPY dbt/edikte_dbt ./dbt/edikte_dbt                                                               0.0s\n => [10/10] RUN cp ./dbt/edikte_dbt/profiles_cloudrun.yml ./dbt/edikte_dbt/profiles.yml                        0.2s\n => exporting to image                                                                                        33.1s\n => => exporting layers                                                                                       27.3s\n => => exporting manifest sha256:80c34a396472e861d24979e60e1eefcedbdc688a416aa76125be497c58eb0976              0.0s\n => => exporting config sha256:254ebbff2fef2096a07034bced074b8d5a07b62d417323ed35d002206905f97a                0.0s\n => => exporting attestation manifest sha256:04479a9227e245e47be565c8a5d24ee39135d92ba6d4378d8f97051eb8c4d3d0  0.0s\n => => exporting manifest list sha256:10777693ca27c242ce7b09d290bf680941f91ad861f1a3ab0d44d8dc418318d5         0.0s\n => => naming to gcr.io/edikte-analytics-2026/pipeline-jobs:latest                                             0.0s\n => => unpacking to gcr.io/edikte-analytics-2026/pipeline-jobs:latest                                          5.8s\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker push gcr.io/edikte-analytics-2026/pipeline-jobs\nUsing default tag: latest\nThe push refers to repository [gcr.io/edikte-analytics-2026/pipeline-jobs]\nd6f217b81b2e: Pushed\n44136fa355b3: Already exists\nfa18dfb1257a: Layer already exists\n26c307b5e35a: Layer already exists\nb952fe9f6810: Layer already exists\n6760bfe2ff00: Layer already exists\n03be8de7b4b8: Layer already exists\n9abcc9d74876: Pushed\n943151a35e7c: Pushed\n0ad5032ab54f: Pushed\ne68bb5039ee4: Pushed\n8b5a77f5fbfb: Pushed\na3e939d5b073: Pushed\n9744ab560c18: Pushed\n9a5e6f15732f: Pushed\nlatest: digest: sha256:10777693ca27c242ce7b09d290bf680941f91ad861f1a3ab0d44d8dc418318d5 size: 856\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run jobs update pipeline-job --image gcr.io/edikte-analytics-2026/pipeline-jobs --region europe-west3\nUpdating Cloud Run job [pipeline-job] in project [edikte-analytics-2026] region [europe-west3]\n✓ Updating job... Done.\nDone.\nJob [pipeline-job] has successfully been updated.\nTo execute this job, use:\ngcloud run jobs execute pipeline-job\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run jobs execute pipeline-job --region europe-west3\n✓ Creating execution... Done.\n  ✓ Provisioning resources... Provisioned imported containers.\nDone.\nExecution [pipeline-job-6tzkx] has successfully started running.\nView details about this execution by running:\ngcloud run jobs executions describe pipeline-job-6tzkx\nOr visit https://console.cloud.google.com/run/jobs/executions/details/europe-west3/pipeline-job-6tzkx?project=523082904080\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run regions list\nNAME\nafrica-south1\nasia-east1\nasia-east2\nasia-northeast1\nasia-northeast2\nasia-northeast3\nasia-south1\nasia-south2\nasia-southeast1\nasia-southeast2\nasia-southeast3\naustralia-southeast1\naustralia-southeast2\neurope-central2\neurope-north1\neurope-north2\neurope-southwest1\neurope-west1\neurope-west10\neurope-west12\neurope-west2\neurope-west3\neurope-west4\neurope-west6\neurope-west8\neurope-west9\nme-central1\nme-central2\nme-west1\nnorthamerica-northeast1\nnorthamerica-northeast2\nnorthamerica-south1\nsouthamerica-east1\nsouthamerica-west1\nus-central1\nus-east1\nus-east4\nus-east5\nus-south1\nus-west1\nus-west2\nus-west3\nus-west4\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud compute zones list | grep -E \"(us|europe|asia)\" | head -n 5\nAPI [compute.googleapis.com] not enabled on project [edikte-analytics-2026]. Would you like to enable and retry\n(this will take a few minutes)? (y/N)?  n\nERROR: (gcloud.compute.zones.list) [boudy1131@gmail.com] does not have permission to access projects instance [edikte-analytics-2026] (or it may not exist): Compute Engine API has not been used in project edikte-analytics-2026 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=edikte-analytics-2026 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. This command is authenticated as boudy1131@gmail.com which is the active account specified by the [core/account] property.\nCompute Engine API has not been used in project edikte-analytics-2026 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=edikte-analytics-2026 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\nGoogle developers console API activation\nhttps://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=edikte-analytics-2026\n- '@type': type.googleapis.com/google.rpc.ErrorInfo\n  domain: googleapis.com\n  metadata:\n    activationUrl: https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=edikte-analytics-2026\n    consumer: projects/edikte-analytics-2026\n    containerInfo: edikte-analytics-2026\n    service: compute.googleapis.com\n    serviceTitle: Compute Engine API\n  reason: SERVICE_DISABLED\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ docker build -t gcr.io/edikte-analytics-2026/streamlit-app:latest ./deploy/streamlit gcloud auth configure-docker docker push gcr.io/edikte-analytics-2026/streamlit-app:latest gcloud run deploy streamlit-app --image gcr.io/edikte-analytics-2026/streamlit-app:latest --platform managed --region eu-west-3 --allow-unauthenticated",
+      "timestamp": 1786865296167,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app . docker push gcr.io/edikte-analytics-2026/streamlit-app gcloud run deploy edikte-analytics-dashboard --image gcr.io/edikte-analytics-2026/streamlit-app --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com --region europe-west3 --allow-unauthenticated --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786865304583,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -t gcr.io/edikte-analytics-2026/streamlit-app:latest ./deploy/streamlit",
+      "timestamp": 1786865312626,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .",
+      "timestamp": 1786865378489,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/streamlit-app",
+      "timestamp": 1786865391884,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run deploy edikte-analytics-dashboard   --image gcr.io/edikte-analytics-2026/streamlit-app   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com   --region europe-west3   --allow-unauthenticated   --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786865419983,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -t gcr.io/edikte-analytics-2026/streamlit-app:latest ./deploy/streamlit",
+      "timestamp": 1786865422939,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .",
+      "timestamp": 1786865849491,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker push gcr.io/edikte-analytics-2026/streamlit-app",
+      "timestamp": 1786865863277,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run deploy edikte-analytics-dashboard   --image gcr.io/edikte-analytics-2026/streamlit-app   --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com   --region europe-west3   --allow-unauthenticated   --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1786865881691,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .",
+      "timestamp": 1786866031913,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud monitoring uptime create edikte-dashboard-uptime --resource-type=uptime-url --resource-labels=host= --period=5 < your-cloud-run-domain > --path=/",
+      "timestamp": 1786912008147,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud monitoring uptime create edikte-dashboard-uptime \\\n  --resource-type=uptime-url \\\n  --resource-labels=host=<your-cloud-run-domain> \\\n  --path=/ \\\n  --period=5",
+      "timestamp": 1786912012093,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services list --project=edikte-analytics-2026",
+      "timestamp": 1786912069465,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud monitoring uptime create edikte-dashboard-uptime   --resource-type=uptime-url   --resource-labels=host=https://edikte-analytics-dashboard-523082904080.europe-west3.run.app   --path=/   --period=5",
+      "timestamp": 1786912158471,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud monitoring uptime create edikte-dashboard-uptime   --resource-type=uptime-url   --resource-labels=host=edikte-analytics-dashboard-5230829\n04080.europe-west3.run.app   --path=/   --period=5",
+      "timestamp": 1786912185937,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud monitoring channels list --project=edikte-analytics-2026",
+      "timestamp": 1786912317935,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring channel\ns",
+      "timestamp": 1786912339269,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring channel\ns list --project=edikte-analytics-2026",
+      "timestamp": 1786912351587,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud monitoring uptime list-configs --format=\"value(name)\"",
+      "timestamp": 1786912798538,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cat > /tmp/uptime_alert_policy.json <<'EOF'\n{\n  \"displayName\": \"Dashboard uptime failure\",\n  \"conditions\": [\n    {\n      \"displayName\": \"Uptime check failed\",\n      \"conditionThreshold\": {\n        \"filter\": \"resource.type=\\\"uptime_url\\\" AND metric.type=\\\"monitoring.googleapis.com/uptime_check/check_passed\\\" AND metric.labels.check_id=\\\"edikte-dashboard-uptime-KvijgIcHfZg\\\"\",\n        \"comparison\": \"COMPARISON_LT\",\n        \"thresholdValue\": 1,\n        \"duration\": \"300s\",\n        \"aggregations\": [\n          {\n            \"alignmentPeriod\": \"300s\",\n            \"perSeriesAligner\": \"ALIGN_FRACTION_TRUE\",\n            \"crossSeriesReducer\": \"REDUCE_MEAN\"\n          }\n        ],\n        \"trigger\": {\n          \"count\": 1\n        }\n      }\n    }\n  ],\n  \"notificationChannels\": [\n    \"projects/edikte-analytics-2026/notificationChannels/12541468644353251019\"\n  ],\n  \"combiner\": \"OR\"\n}\nEOF",
+      "timestamp": 1786923760414,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring policies create --policy-from-file=/tmp/uptime_alert_policy.json",
+      "timestamp": 1786923773665,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring policies list --filter=\"displayName='Dashboard uptime failure'\"",
+      "timestamp": 1786924125160,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "$ { source \"/tmp/wshist_hgs8l.sh\" && rm \"/tmp/wshist_hgs8l.sh\"; } 2>/dev/null",
+      "timestamp": 1786924914460,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_t58nk9.sh\" && rm \"/tmp/wshist_t58nk9.sh\"; } 2>/dev/null",
+      "timestamp": 1786924914469,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_smq5zt.sh\" && rm \"/tmp/wshist_smq5zt.sh\"; } 2>/dev/null",
+      "timestamp": 1786924914470,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "$ { source \"/tmp/wshist_7ahhf.sh\" && rm \"/tmp/wshist_7ahhf.sh\"; } 2>/dev/null",
+      "timestamp": 1786924914472,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1786924915195,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source \"/tmp/wshist_y3zdaf.sh\"",
+      "timestamp": 1786925652183,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_lceln.sh\" && rm \"/tmp/wshist_lceln.sh\"; } 2>/dev/null",
+      "timestamp": 1786925652191,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source \"/tmp/wshist_3ke7mp.sh\"",
+      "timestamp": 1786925652194,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_l1zzfg.sh\" && rm \"/tmp/wshist_l1zzfg.sh\"; } 2>/dev/null",
+      "timestamp": 1786925652208,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_w6jxnh.sh\" && rm \"/tmp/wshist_w6jxnh.sh\"; } 2>/dev/null",
+      "timestamp": 1786925652210,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_jrou4e.sh\" && rm \"/tmp/wshist_jrou4e.sh\"; } 2>/dev/null",
+      "timestamp": 1786927739241,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_ten6h.sh\" && rm \"/tmp/wshist_ten6h.sh\"; } 2>/dev/null",
+      "timestamp": 1786927739244,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_qhs8qb.sh\" && rm \"/tmp/wshist_qhs8qb.sh\"; } 2>/dev/null",
+      "timestamp": 1786927739247,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_tu75n.sh\" && rm \"/tmp/wshist_tu75n.sh\"; } 2>/dev/null",
+      "timestamp": 1786927739250,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1786927739413,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud monitoring time-series list \\\n  --filter='resource.type=\"uptime_url\" AND metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.labels.check_id=\"edikte-dashboard-uptime-KvijgIcHfZg\"' \\\n  --interval-end-time=\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" \\\n  --interval-start-time=\"$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\"",
+      "timestamp": 1786928371486,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring time-series list   --filter\n='resource.type=\"uptime_url\" AND metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.labels.check_id=\"edikte\n-dashboard-uptime-KvijgIcHfZg\"'   --interval-end-time=\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"   --interval-start-time=\"$(date -u -d '30 minu\ntes ago' +%Y-%m-%dT%H:%M:%SZ)\"",
+      "timestamp": 1786928471575,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud alpha monitoring time-series list \\\n    --filter='resource.type=\"uptime_url\" AND metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.labels.check_id=\"edikte-dashboard-uptime-KvijgIcHfZg\"' \\\n    --interval-end-time=\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" \\\n    --interval-start-time=\"$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\"",
+      "timestamp": 1786928478550,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "PROJECT_ID=\"your-project-id\"  # Replace with your project ID\ncurl -X GET \\\n    \"https://monitoring.googleapis.com/v3/projects/$PROJECT_ID/timeSeries?filter=resource.type%3D%22uptime_url%22%20AND%20metric.type%3D%22monitoring.googleapis.com/uptime_check/check_passed%22%20AND%20metric.labels.check_id%3D%22edikte-dashboard-uptime-KvijgIcHfZg%22&interval.startTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)&interval.endTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\" \\\n    -H \"Authorization: Bearer $(gcloud auth print-access-token)\" \\\n    -H \"Content-Type: application/json\"",
+      "timestamp": 1786928490112,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud monitoring uptime list-configs",
+      "timestamp": 1786928506858,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "--interval.startTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)&interval.endTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+      "timestamp": 1786928614959,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud monitoring uptime describe edikte-dashboard-uptime-KvijgIcHfZg",
+      "timestamp": 1786928655345,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services update edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --min-instances=0 \\\n  --max-instances=0",
+      "timestamp": 1786928714487,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "dev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ --interval.startTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)&interval.endTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)\n[1] 2653959\n--interval.startTime=2026-08-17T00:33:34Z: command not found\ninterval.endTime=2026-08-17T01:03:34Z: command not found\n[1]+  Exit 127                   --interval.startTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ --interval.startTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)&interval.endTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)\n[1] 2654096\ninterval.endTime=2026-08-17T01:03:38Z: command not found\n--interval.startTime=2026-08-17T00:33:38Z: command not found\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud monitoring uptime describe edikte-dashboard-uptime-KvijgIcHfZg\n[1]+  Exit 127                   --interval.startTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\ncheckerType: STATIC_IP_CHECKERS\ndisplayName: edikte-dashboard-uptime\nhttpCheck:\n  path: /\n  port: 80\n  requestMethod: GET\nmonitoredResource:\n  labels:\n    host: edikte-analytics-dashboard-523082904080.europe-west3.run.app\n    project_id: edikte-analytics-2026\n  type: uptime_url\nname: projects/edikte-analytics-2026/uptimeCheckConfigs/edikte-dashboard-uptime-KvijgIcHfZg\nperiod: 300s\ntimeout: 60s\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services update edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --min-instances=0 \\\n  --max-instances=0\nX Deploying...\n  . Creating Revision...\n  . Routing traffic...\nDeployment failed\nERROR: (gcloud.run.services.update) spec.template.metadata.annotations: Invalid value 0. autoscaling.knative.dev/maxScale anndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services update-traffic edikte-analytics-dashboard \\am-pc-System-Product-Name:~/coding_pgcloud run services update-traffic edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --to-latest",
+      "timestamp": 1786928838733,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cloud run services update edikte-analytics-dashboard --no-traffic",
+      "timestamp": 1786928856704,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services update edikte-analytics-dashboard --no-traffic",
+      "timestamp": 1786928883135,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services describe edikte-analytics-dashboard --region europe-west3 --format=\"value(status.traffic)\"",
+      "timestamp": 1786929910023,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "curl -I $(gcloud run services describe edikte-analytics-dashboard --region europe-west3 --format=\"value(status.url)\")",
+      "timestamp": 1786929919696,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services update edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --min-instances=0 \\\n  --max-instances=0",
+      "timestamp": 1786929936749,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1786929939436,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services remove-iam-policy-binding edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --member=\"allUsers\" \\\n  --role=\"roles/run.invoker\"",
+      "timestamp": 1786929984893,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services add-iam-policy-binding edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --member=\"allUsers\" \\\n  --role=\"roles/run.invoker\"",
+      "timestamp": 1786930488933,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services update-traffic edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --to-latest",
+      "timestamp": 1786930525416,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_xrzsil.sh\" && rm \"/tmp/wshist_xrzsil.sh\"; } 2>/dev/null",
+      "timestamp": 1786930638235,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1786930642486
+    },
+    {
+      "command": "gcloud connect  edikte-analytics-db --user=postgres --name=edikte_analytics",
+      "timestamp": 1786930932703,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud connect  edikte-analytics-db --user=postgres --database=edikte_analytics",
+      "timestamp": 1786930958048,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud sql instances describe edikte-analytics-db --format=\"value(settings.backupConfiguration)\"",
+      "timestamp": 1786931034698,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "ream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud alpha monitoring policies list --filter=\"displayName='Dashboard uptime failure'\"\n---\ncombiner: OR\nconditions:\n- conditionThreshold:\n    aggregations:\n    - alignmentPeriod: 300s\n      crossSeriesReducer: REDUCE_MEAN\n      perSeriesAligner: ALIGN_FRACTION_TRUE\n    comparison: COMPARISON_LT\n    duration: 300s\n    filter: resource.type=\"uptime_url\" AND metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\"\n      AND metric.labels.check_id=\"edikte-dashboard-uptime-KvijgIcHfZg\"\n    thresholdValue: 1.0\n    trigger:\n      count: 1\n  displayName: Uptime check failed\n  name: projects/edikte-analytics-2026/alertPolicies/18180319987227433374/conditions/18180319987227431323\ncreationRecord:\n  mutateTime: '2026-08-16T23:42:53.005844398Z'\n  mutatedBy: Boudy1131@gmail.com\ndisplayName: Dashboard uptime failure\nenabled: true\nmutationRecord:\n  mutateTime: '2026-08-16T23:42:53.005844398Z'\n  mutatedBy: Boudy1131@gmail.com\nname: projects/edikte-analytics-2026/alertPolicies/18180319987227433374\nnotificationChannels:\n- projects/edikte-analytics-2026/notificationChannels/12541468644353251019\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$\n *  History restored\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ { source \"/tmp/wshist_smq5zt.sh\" && rm \"/tmp/wshist_smq5zt.sh\"; } 2>/dev/null\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ { source \"/tmp/wshist_y3zdaf.sh\" && rm \"/tmp/wshist_y3zdaf.sh\"; } 2>/dev/null\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$\n *  History restored\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ { source \"/tmp/wshist_qhs8qb.sh\" && rm \"/tmp/wshistdev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud monitoring uptime describe edikte-dashboard-uptime-KvijgIcHfZgream-pc-System-Product-Name:~/coding_pgcloud monitoring uptime describe edikte-dashboard-uptime-KvijgIcHfZg\ncheckerType: STATIC_IP_CHECKERS\ndisplayName: edikte-dashboard-uptime\nhttpCheck:\n  path: /\n  port: 80\n  requestMethod: GET\nmonitoredResource:\n  labels:\n    host: edikte-analytics-dashboard-523082904080.europe-west3.run.app\n    project_id: edikte-analytics-2026\n  type: uptime_url\nname: projects/edikte-analytics-2026/uptimeCheckConfigs/edikte-dashboard-uptime-KvijgIcHfZg\nperiod: 300s\ntimeout: 60s\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud monitoring time-series list \\\n  --filter='resource.type=\"uptime_url\" AND metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.labels.check_id=\"edikte-dashboard-uptime-KvijgIcHfZg\"' \\\n  --interval-end-time=\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" \\\n  --interval-start-time=\"$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\"\nERROR: (gcloud.monitoring) Invalid choice: 'time-series'.\nMaybe you meant:\n  gcloud monitoring uptime list-configs\n  gcloud monitoring uptime list-ips\n  gcloud monitoring uptime create\n  gcloud monitoring uptime delete\n  gcloud monitoring uptime describe\n  gcloud monitoring uptime update\n  gcloud monitoring dashboards list\n  gcloud monitoring policies list\n  gcloud monitoring snoozes list\nTo search the help text of gcloud commands, run:\n  gcloud help -- SEARCH_TERMS\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud alpha monitoring time-series list   --filter\n='resource.type=\"uptime_url\" AND metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.labels.check_id=\"edikte\n-dashboard-uptime-KvijgIcHfZg\"'   --interval-end-time=\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"   --interval-start-time=\"$(date -u -d '30 minu\ntes ago' +%Y-%m-%dT%H:%M:%SZ)\"\nERROR: (gcloud.alpha.monitoring) Invalid choice: 'time-series'.\nMaybe you meant:\n  gcloud monitoring uptime list-configs\n  gcloud monitoring uptime list-ips\n  gcloud monitoring uptime create\n  gcloud monitoring uptime delete\n  gcloud monitoring uptime describe\n  gcloud monitoring uptime update\n  gcloud alpha monitoring channels config export\n  gcloud alpha monitoring policies config export\n  gcloud monitoring dashboards list\n  gcloud monitoring policies list\n  gcloud alpha monitoring alerts\n  gcloud alpha monitoring channel-descriptors\n  gcloud alpha monitoring dashboards\n  gcloud alpha monitoring metrics-scopes\n  gcloud alpha monitoring snoozes\n  gcloud alpha monitoring uptime\nTo search the help text of gcloud commands, run:\n  gcloud help -- SEARCH_TERMS\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud alpha monitoring time-series list \\\n    --filter='resource.type=\"uptime_url\" AND metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.labels.check_id=\"edikte-dashboard-uptime-KvijgIcHfZg\"' \\\n    --interval-end-time=\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" \\\n    --interval-start-time=\"$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\"\nERROR: (gcloud.alpha.monitoring) Invalid choice: 'time-series'.\nMaybe you meant:\n  gcloud monitoring uptime list-configs\n  gcloud monitoring uptime list-ips\n  gcloud monitoring uptime create\n  gcloud monitoring uptime delete\n  gcloud monitoring uptime describe\n  gcloud monitoring uptime update\n  gcloud alpha monitoring channels config export\n  gcloud alpha monitoring policies config export\n  gcloud monitoring dashboards list\n  gcloud monitoring policies list\n  gcloud alpha monitoring alerts\n  gcloud alpha monitoring channel-descriptors\n  gcloud alpha monitoring dashboards\n  gcloud alpha monitoring metrics-scopes\n  gcloud alpha monitoring snoozes\n  gcloud alpha monitoring uptime\nTo search the help text of gcloud commands, run:\n  gcloud help -- SEARCH_TERMS\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ PROJECT_ID=\"your-project-id\"  # Replace with your project ID\ncurl -X GET \\\n    \"https://monitoring.googleapis.com/v3/projects/$PROJECT_ID/timeSeries?filter=resource.type%3D%22uptime_url%22%20AND%20metric.type%3D%22monitoring.googleapis.com/uptime_check/check_passed%22%20AND%20metric.labels.check_id%3D%22edikte-dashboard-uptime-KvijgIcHfZg%22&interval.startTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)&interval.endTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\" \\\n    -H \"Authorization: Bearer $(gcloud auth print-access-token)\" \\\n    -H \"Content-Type: application/json\"\n{\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Permission denied (or the resource may not exist).\",\n    \"status\": \"PERMISSION_DENIED\"\n  }\n}\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud monitoring uptime list-configs\n---\ncheckerType: STATIC_IP_CHECKERS\ndisplayName: edikte-dashboard-uptime\nhttpCheck:\n  path: /\n  port: 80\n  requestMethod: GET\nmonitoredResource:\n  labels:\n    host: edikte-analytics-dashboard-523082904080.europe-west3.run.app\n    project_id: edikte-analytics-2026\n  type: uptime_url\nname: projects/edikte-analytics-2026/uptimeCheckConfigs/edikte-dashboard-uptime-KvijgIcHfZg\nperiod: 300s\ntimeout: 60s\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ --interval.startTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)&interval.endTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)\n[1] 2653959\n--interval.startTime=2026-08-17T00:33:34Z: command not found\ninterval.endTime=2026-08-17T01:03:34Z: command not found\n[1]+  Exit 127                   --interval.startTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ --interval.startTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)&interval.endTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)\n[1] 2654096\ninterval.endTime=2026-08-17T01:03:38Z: command not found\n--interval.startTime=2026-08-17T00:33:38Z: command not found\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud monitoring uptime describe edikte-dashboard-uptime-KvijgIcHfZg\n[1]+  Exit 127                   --interval.startTime=$(date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)\ncheckerType: STATIC_IP_CHECKERS\ndisplayName: edikte-dashboard-uptime\nhttpCheck:\n  path: /\n  port: 80\n  requestMethod: GET\nmonitoredResource:\n  labels:\n    host: edikte-analytics-dashboard-523082904080.europe-west3.run.app\n    project_id: edikte-analytics-2026\n  type: uptime_url\nname: projects/edikte-analytics-2026/uptimeCheckConfigs/edikte-dashboard-uptime-KvijgIcHfZg\nperiod: 300s\ntimeout: 60s\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services update edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --min-instances=0 \\\n  --max-instances=0\nX Deploying...\n  . Creating Revision...\n  . Routing traffic...\nDeployment failed\nERROR: (gcloud.run.services.update) spec.template.metadata.annotations: Invalid value 0. autoscaling.knative.dev/maxScale anndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services update-traffic edikte-analytics-dashboard \\am-pc-System-Product-Name:~/coding_pgcloud run services update-traffic edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --to-latest\n✓ Updating traffic...\n  . Routing traffic...\nDone.\nURL: https://edikte-analytics-dashboard-nhcu2uvgia-ey.a.run.app\nTraffic:\n  100% LATEST (currently edikte-analytics-dashboard-00016-6mr)\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ cloud run services update edikte-analytics-dashboard --no-traffic\nCommand 'cloud' not found, did you mean:\n  command 'hcloud' from deb hcloud-cli (1.39.0-3)\n  command 'icloud' from deb python3-pyicloud (2.3.0-1)\nTry: sudo apt install <deb name>\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ cloud run services update edikte-analytics-dashboard --no-traffic\nCommand 'cloud' not found, did you mean:\n  command 'hcloud' from deb hcloud-cli (1.39.0-3)\n  command 'icloud' from deb python3-pyicloud (2.3.0-1)\nTry: sudo apt install <deb name>\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services update edikte-analytics-dashboard --no-traffic\nPlease specify a region:\n [1] africa-south1\n [2] asia-east1\n [3] asia-east2\n [4] asia-northeast1\n [5] asia-northeast2\n [6] asia-northeast3\n [7] asia-south1\n [8] asia-south2\n [9] asia-southeast1\n [10] asia-southeast2\n [11] asia-southeast3\n [12] australia-southeast1\n [13] australia-southeast2\n [14] europe-central2\n [15] europe-north1\n [16] europe-north2\n [17] europe-southwest1\n [18] europe-west1\n [19] europe-west10\n [20] europe-west12\n [21] europe-west2\n [22] europe-west3\n [23] europe-west4\n [24] europe-west6\n [25] europe-west8\n [26] europe-west9\n [27] me-central1\n [28] me-central2\n [29] me-west1\n [30] northamerica-northeast1\n [31] northamerica-northeast2\n [32] northamerica-south1\n [33] southamerica-east1\n [34] southamerica-west1\n [35] us-central1\n [36] us-east1\n [37] us-east4\n [38] us-east5\n [39] us-south1\n [40] us-west1\n [41] us-west2\n [42] us-west3\n [43] us-west4\n [44] cancel\nPlease enter numeric choice or text value (must exactly match list item):  22\nTo make this the default region, run `gcloud config set run/region europe-west3`.\n✓ Updating... Done.\nDone.\nService [edikte-analytics-dashboard] has been updated.\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services describe edikte-analytics-dashboard --region europe-west3 --format=\"value(status.traffic)\"\n{'percent': 100, 'revisionName': 'edikte-analytics-dashboard-00016-6mr'}\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ curl -I $(gcloud run services describe edikte-analytics-dashboard --region europe-west3 --format=\"value(status.url)\")\nHTTP/2 200\ncontent-type: text/html; charset=utf-8\naccept-ranges: bytes\nlast-modified: Sun, 16 Aug 2026 00:44:45 GMT\netag: \"0039c6800929facd25e5f43ea440969c\"\ncache-control: no-cache\nx-cloud-trace-context: c25e8eec794c5fcc6eb1f3d124da8224\ncontent-length: 10951\ndate: Mon, 17 Aug 2026 01:25:19 GMT\nserver: Google Frontend\nalt-svc: h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services update edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --min-instances=0 \\\n  --max-instances=0\nX Deploying...\n  . Creating Revision...\nDeployment failed\nERROR: (gcloud.run.services.update) spec.template.metadata.annotations: Invalid value 0. autoscaling.knative.dev/maxScale annotation must be a positive integer.\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ ^C\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ ^C\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ ^C\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services remove-iam-policy-binding edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --member=\"allUsers\" \\\n  --role=\"roles/run.invoker\"\nUpdated IAM policy for service [edikte-analytics-dashboard].\netag: BwZZNA74TJ0=\nversion: 1\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services add-iam-policy-binding edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --member=\"allUsers\" \\\n  --role=\"roles/run.invoker\"\nUpdated IAM policy for service [edikte-analytics-dashboard].\nbindings:\n- members:\n  - allUsers\n  role: roles/run.invoker\netag: BwZZNC0EN6M=\nversion: 1\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud run services update-traffic edikte-analytics-dashboard \\\n  --region europe-west3 \\\n  --to-latest\n✓ Updating traffic... Done.\n  ✓ Routing traffic...\nDone.\nURL: https://edikte-analytics-dashboard-nhcu2uvgia-ey.a.run.app\nTraffic:\n  100% LATEST (currently edikte-analytics-dashboard-00016-6mr)\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud sql instances describe edikte-analytics-db --format=\"value(settings.backupConfiguration)\"\nbackupRetentionSettings={'retainedBackups': 7, 'retentionUnit': 'COUNT'};backupTier=STANDARD;enabled=True;kind=sql#backupConfiguration;pointInTimeRecoveryEnabled=False;replicationLogArchivingEnabled=False;startTime=01:00;transactionLogRetentionDays=7;transactionalLogStorageState=TRANSACTIONAL_LOG_STORAGE_STATE_UNSPECIFIED\ndev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics$ gcloud sql instances patch edikte-analytics-db --enable-point-in-time-recovery",
+      "timestamp": 1786932102062,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services update-traffic edikte-analytics-dashboard --region=europe-west3 --to-revisions=<previous-revision>=100",
+      "timestamp": 1786932531532,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run revisions list --service=edikte-analytics-dashboard --region=europe-west3",
+      "timestamp": 1786932544787,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services update-traffic edikte-analytics-dashboard --region=europe-west3 --to-revisions=<previous-revision>=100^C",
+      "timestamp": 1786932560596,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services update-traffic edikte-analytics-dashboard --region=europe-west3 --to-revisions=edikte-analytics-dashboard-00015-b6b=100",
+      "timestamp": 1786932598014,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services update-traffic edikte-analytics-dashboard --region=europe-west3 --to-latest",
+      "timestamp": 1786932693400,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run services describe edikte-analytics-dashboard --region=europe-west3 --format=\"value(status.traffic)\"",
+      "timestamp": 1786932696368,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud sql connect  e\ndikte-analytics-db --user=postgres --database=edikte_analytics",
+      "timestamp": 1786935112665,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1786935120816,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_g6uhf9.sh\" && rm \"/tmp/wshist_g6uhf9.sh\"; } 2>/dev/null",
+      "timestamp": 1787000344029,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_wxlrif.sh\" && rm \"/tmp/wshist_wxlrif.sh\"; } 2>/dev/null",
+      "timestamp": 1787000344030,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787000344433,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    }
+  ],
+  "lastUpdated": 1787000344433
+}
