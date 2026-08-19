@@ -1383,7 +1383,37 @@
       "command": "git add -A\ngit commit -m \"Fix dbt profile filename in CI, remove unused deploy.yml draft workflow\"\ngit push",
       "timestamp": 1787129777086,
       "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "git add -A\ngit commit -m \"Fixed error in parsing secrets\"\ngit push",
+      "timestamp": 1787130059777,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "cd ../..",
+      "timestamp": 1787130221865,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "cd infra/",
+      "timestamp": 1787130223854,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787130237691,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform apply",
+      "timestamp": 1787130387573,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "cd ..",
+      "timestamp": 1787130399256,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
     }
   ],
-  "lastUpdated": 1787129777086
+  "lastUpdated": 1787130399256
 }

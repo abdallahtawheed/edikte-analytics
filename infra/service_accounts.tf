@@ -35,3 +35,15 @@ resource "google_project_iam_member" "github_actions_storage_admin" {
   role    = "roles/storage.admin"
   member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
 }
+
+resource "google_project_iam_member" "github_actions_bq_job_user" {
+  project = "edikte-analytics-2026"
+  role    = "roles/bigquery.jobUser"
+  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
+}
+
+resource "google_project_iam_member" "github_actions_bq_data_viewer" {
+  project = "edikte-analytics-2026"
+  role    = "roles/bigquery.dataViewer"
+  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
+}
