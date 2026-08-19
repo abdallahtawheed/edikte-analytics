@@ -807,7 +807,439 @@
       "command": "dbt run",
       "timestamp": 1787024962123,
       "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "git add --all",
+      "timestamp": 1787025036111,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git status",
+      "timestamp": 1787025037996,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git commit -m\"\"",
+      "timestamp": 1787025046794,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git commit -m\"\n> refactored a function\n> fixed an accidental indentation that broke persist.py\n> \"",
+      "timestamp": 1787025090438,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git push\\\n>",
+      "timestamp": 1787025099178,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/pipeline/Dockerfile -t gcr.io/edikte-analytics-2026/pipeline-jobs . --no-cache\ndocker push gcr.io/edikte-analytics-2026/pipeline-jobs\ngcloud run jobs update pipeline-job --image gcr.io/edikte-analytics-2026/pipeline-jobs --region europe-west3\ngcloud run jobs execute pipeline-job --region europe-west3",
+      "timestamp": 1787025598517,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read 'jsonPayload.event=\"listing_processed\"' --limit 5",
+      "timestamp": 1787025742093,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read 'resource.type=\"cloud_run_job\"' --limit 5 --freshness 1h",
+      "timestamp": 1787025898976,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read 'jsonPayload.e\nvent=\"listing_processed\"' --limit 5",
+      "timestamp": 1787025920439,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read 'jsonPayload.listing_processed=\"listing_processed\"' --limit 5 --freshness 1h",
+      "timestamp": 1787026006337,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_twtsst.sh\" && rm \"/tmp/wshist_twtsst.sh\"; } 2>/dev/null",
+      "timestamp": 1787100272547,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_dpsm8l.sh\" && rm \"/tmp/wshist_dpsm8l.sh\"; } 2>/dev/null",
+      "timestamp": 1787100272551,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787100272853,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_7176ia.sh\" && rm \"/tmp/wshist_7176ia.sh\"; } 2>/dev/null",
+      "timestamp": 1787100352118,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read 'jsonPayload.event=\"listing_processed\"' --limit 5",
+      "timestamp": 1787100468951,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_m254rc.sh\" && rm \"/tmp/wshist_m254rc.sh\"; } 2>/dev/null",
+      "timestamp": 1787100689734,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787100694109
+    },
+    {
+      "command": "gcloud logging read 'jsonPayload.listing_processed=\"listing_processed\"' --limit 5 --freshness 1h",
+      "timestamp": 1787100733374,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "^[[200~gcloud logging read 'resource.type=\"cloud_run_job\"' --limit 5 --freshness 1h~",
+      "timestamp": 1787100736159,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read 'resource.type=\"cloud_run_job\"' --limit 5 --freshness 1h",
+      "timestamp": 1787101282230,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read 'resource.type=\"cloud_run_job\"' --limit 5 --freshness 48h",
+      "timestamp": 1787101995221,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud logging read 'jsonPayload.event=\"listing_processed\"' --limit 5 --freshness=1",
+      "timestamp": 1787109097330,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud asset search-all-resources --project=edikte-analytics-2026 --format=\"table(assetType,name)\"",
+      "timestamp": 1787109898903,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud asset search-all-resources --project=edikte-analytics-2026 --format=\"table(assetType,name)\"{ source \"/tmp/wshist_4tn0ee.sh\" && rm \"/tmp/wshist_4tn0ee.sh\"; } 2>/dev/null\nbash: syntax error near unexpected token `}'",
+      "timestamp": 1787110422648,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_f8nvn.sh\" && rm \"/tmp/wshist_f8nvn.sh\"; } 2>/dev/null",
+      "timestamp": 1787110422652,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787110422996,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud asset search-all-resources --project=edikte-analytics-2026 --format=\"table(assetType,name)\"{ source \"/tmp/wshist_4tn0ee.sh\" && rm \"/tmp/wshist_4tn0ee.sh\"; } 2>/dev/null\nbash: syntax error near unexpected token `}'",
+      "timestamp": 1787110433782,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud asset search-all-resources --project=edikte-analytics-2026 --format=\"table(assetType,name)\"",
+      "timestamp": 1787111113046,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_ocxk5v.sh\" && rm \"/tmp/wshist_ocxk5v.sh\"; } 2>/dev/null",
+      "timestamp": 1787111128725,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787111133156
+    },
+    {
+      "command": "cat help",
+      "timestamp": 1787111136340,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_js1sk.sh\" && rm \"/tmp/wshist_js1sk.sh\"; } 2>/dev/null",
+      "timestamp": 1787111274846,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "# install\nbrew install terraformer  # or download the binary directly from GitHub releases for Linux\nterraformer import google \\\n  --resources=cloudRun,cloudScheduler,iam,serviceAccount \\\n  --projects=edikte-analytics-2026 \\\n  --regions=europe-west3^C",
+      "timestamp": 1787111279358,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787111279458
+    },
+    {
+      "command": "# install\nbrew install terraformer  # or download the binary directly from GitHub releases for Linux\nterraformer import google \\\n  --resources=cloudRun,cloudScheduler,iam,serviceAccount \\\n  --projects=edikte-analytics-2026 \\\n  --regions=europe-west3",
+      "timestamp": 1787111282546,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "brew install terraformer",
+      "timestamp": 1787111306164,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1787111313217,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "curl -LO https://github.com/GoogleCloudPlatform/terraformer/releases/download/$(curl -s https://api.github.com/repos/GoogleCloudPlatform/terraformer/releases/latest | grep tag_name | cut -d '\"' -f 4)/terraformer-google-linux-amd64\nchmod +x terraformer-google-linux-amd64\nsudo mv terraformer-google-linux-amd64 /usr/local/bin/terraformer",
+      "timestamp": 1787111405811,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "terraformer --version",
+      "timestamp": 1787111407919,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd ~/coding_projects/edikte-analytics/infra\nterraform init",
+      "timestamp": 1787111419327,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "terraform init",
+      "timestamp": 1787111433937,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform",
+      "timestamp": 1787111471520,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "sudo apt install terraform",
+      "timestamp": 1787111481166,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "sudo apt-get install terraform",
+      "timestamp": 1787111522063,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg\necho \"deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list\nsudo apt update\nsudo apt install terraform -y",
+      "timestamp": 1787111837881,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "curl -4 -I https://apt.releases.hashicorp.com/gpg",
+      "timestamp": 1787111839641,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "wget -4 -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg",
+      "timestamp": 1787111864171,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "echo 'Acquire::ForceIPv4 \"true\";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4",
+      "timestamp": 1787111906103,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "wget -4 -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg\necho \"deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list\nsudo apt update\nsudo apt install terraform -y",
+      "timestamp": 1787111919768,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform --version",
+      "timestamp": 1787111927853,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "curl -4 -LO https://github.com/GoogleCloudPlatform/terraformer/releases/download/$(curl -4 -s https://api.github.com/repos/GoogleCloudPlatform/terraformer/releases/latest | grep tag_name | cut -d '\"' -f 4)/terraformer-google-linux-amd64\nchmod +x terraformer-google-linux-amd64\nsudo mv terraformer-google-linux-amd64 /usr/local/bin/terraformer\nterraformer --version",
+      "timestamp": 1787111951666,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "sudo tee /etc/sysctl.d/99-disable-ipv6.conf << 'EOF'\nnet.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1\nEOF\nsudo sysctl -p /etc/sysctl.d/99-disable-ipv6.conf",
+      "timestamp": 1787112092624,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "gcloud asset search-all-resources --project=edikte-analytics-2026 --format=\"table(assetType,name)\"",
+      "timestamp": 1787112096362,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud auth list",
+      "timestamp": 1787112117247,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "gcloud asset search-all-resources --project=edikte-analytics-2026 --format=\"table(assetType,name)\"",
+      "timestamp": 1787112125714,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "ip -6 addr",
+      "timestamp": 1787112129682,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "gcloud asset search-all-resources --project=edikte-analytics-2026 --format=\"table(assetType,name)\"",
+      "timestamp": 1787112314949,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform import google_service_account.pipeline_runner projects/edikte-analytics-2026/serviceAccounts/pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com",
+      "timestamp": 1787112627072,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform init",
+      "timestamp": 1787112644603,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform import google_service_account.pipeline_runner projects/edikte-analytics-2026/serviceAccounts/pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com",
+      "timestamp": 1787112666830,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787112787408,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1787112826264,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform import google_service_account.pipeline_runner projects/edikte-analytics-2026/serviceAccounts/pipeline-runner@edikte-analytics-2026.iam.gserviceaccount.com",
+      "timestamp": 1787112978916,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "^[[200~terraform plan~",
+      "timestamp": 1787112993893,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787112997831,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraformer import google \\\n  --resources=cloudRun,cloudScheduler,secretManager,monitoring \\\n  --projects=edikte-analytics-2026 \\\n  --regions=europe-west3",
+      "timestamp": 1787113038776,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "gcloud services enable compute.googleapis.com",
+      "timestamp": 1787113247470,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraformer import google   --reso\nurces=cloudRun,cloudScheduler,secretManager,monitoring   --projects=edikte-analytics-2026   --regions=europe-west3",
+      "timestamp": 1787113268738,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "gcloud asset search-all-resources --project=edikte-analytics-2026 --format=\"table(assetType,name)\"",
+      "timestamp": 1787113352408,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform import google_service_account.streamlit_runner projects/edikte-analytics-2026/serviceAccounts/streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com",
+      "timestamp": 1787113895477,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787113908675,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "rvices/edikte-analytics-dashboardkte-analytics-2026/locations/europe-west3/services/edikte-analytics-dashboard\nterraform import google_cloud_run_v2_job.pipeline projects/edikte-analytics-2026/locations/europe-west3/jobs/pipeline-job",
+      "timestamp": 1787114061039,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform import google_secret_manager_secret.db_password projects/edikte-analytics-2026/secrets/db-password",
+      "timestamp": 1787114078312,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform import google_monitoring_notification_channel.email projects/edikte-analytics-2026/notificationChannels/12541468644353251019\nterraform import google_monitoring_uptime_check_config.dashboard_uptime projects/edikte-analytics-2026/uptimeCheckConfigs/edikte-dashboard-uptime-KvijgIcHfZg\nterraform import google_monitoring_alert_policy.pipeline_failure projects/edikte-analytics-2026/alertPolicies/633026184850195107\nterraform import google_monitoring_alert_policy.dashboard_uptime_failure projects/edikte-analytics-2026/alertPolicies/18180319987227433374",
+      "timestamp": 1787114176028,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "scheduler.tf",
+      "timestamp": 1787114188172,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform import google_cloud_scheduler_job.pipeline_daily projects/edikte-analytics-2026/locations/europe-west3/jobs/pipeline-daily",
+      "timestamp": 1787114229051,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787114246936,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1787114313063,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787114419079,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1787114445006,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787114602862,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "^[[200~terraform plan~",
+      "timestamp": 1787114871183,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787114877506,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform import google_dataplex_lake.analytics_lake projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake\nterraform import google_dataplex_zone.raw_zone projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake/zones/raw-zone\nterraform import google_dataplex_zone.curated_zone projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake/zones/curated-zone\nterraform import google_dataplex_asset.raw_bigquery_asset projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake/zones/raw-zone/assets/raw-bigquery-asset\nterraform import google_dataplex_asset.marts_bigquery_asset projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake/zones/curated-zone/assets/marts-bigquery-asset",
+      "timestamp": 1787115376095,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787115392123,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform import google_dataplex_asset.raw_bigquery_asset projects/edikte-analytics-2026/locations/europe-west3/lakes/edikte-analytics-lake/zones/raw-zone/assets/raw-bigquery-asset^C",
+      "timestamp": 1787115503313,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787115649564,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
     }
   ],
-  "lastUpdated": 1787024962123
+  "lastUpdated": 1787115649564
 }
