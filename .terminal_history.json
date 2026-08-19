@@ -1463,7 +1463,22 @@
       "command": "curl -I $(gcloud run services describe edikte-analytics-dashboard --region europe-west3 --format=\"value(status.url)\")",
       "timestamp": 1787137247762,
       "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git add -A\ngit commit -m \"Fix hardcoded Looker Studio embed URL pointing at wrong page, and fix mart_market_by_region double-counting via UNION ALL rollup\"\ngit push",
+      "timestamp": 1787137254998,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd dbt/edikte_dbt/",
+      "timestamp": 1787137981323,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "dbt run --select mart_flag_summary",
+      "timestamp": 1787137989079,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
     }
   ],
-  "lastUpdated": 1787137247762
+  "lastUpdated": 1787137989079
 }
