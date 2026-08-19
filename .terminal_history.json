@@ -1373,7 +1373,12 @@
       "command": "dbt test",
       "timestamp": 1787119324772,
       "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "git add -A",
+      "timestamp": 1787129465516,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
     }
   ],
-  "lastUpdated": 1787119324772
+  "lastUpdated": 1787129465516
 }
