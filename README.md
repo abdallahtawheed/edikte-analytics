@@ -4,8 +4,9 @@
 Scrapes Austrian judicial property auction listings (Ediktsdatei) on a schedule, 
 tracks each listing through its full legal lifecycle, and builds the historical 
 price archive that doesn't otherwise exist. Includes geographic plotting, price 
-comparison by category/location/size, keyword-based risk flagging, and a growing 
-price-history dataset for eventual price-estimation modeling.
+comparison by category/location/size, keyword-based risk flagging, and a 
+self-retraining price-estimation model that activates automatically once enough 
+real auction outcomes accumulate.
 
 Deployed both to the cloud (public dashboard, scheduled pipeline) and locally 
 (personal fallback, continues working independent of cloud credits).
@@ -13,7 +14,8 @@ Deployed both to the cloud (public dashboard, scheduled pipeline) and locally
 ## Live deployment
 - **Dashboard:** [Cloud Run URL] — public, multi-page (Listings/Map, Analytics, Case Browser)
 - **Analytics report:** [Looker Studio URL]
-- Pipeline runs daily via Cloud Scheduler → Cloud Run Job (02:00 UTC)
+- Pipeline runs daily via Cloud Scheduler → Cloud Run Job (02:00 UTC): scrape → 
+  geocode → sync → dbt → price model training
 
 ## Problem statement
 No public archive of Austrian judicial auction (Zwangsversteigerung) prices exists. 
@@ -26,7 +28,7 @@ actually happening in it.
 
 ## Architecture
 See [ARCHITECTURE.md](/docs/ARCHITECTURE.md) for the full pipeline diagram, 
-deployment topology (cloud + local), and orchestration details.
+deployment topology (cloud + local), orchestration, and CI details.
 
 ## Tech Stack
 
@@ -35,23 +37,28 @@ deployment topology (cloud + local), and orchestration details.
 |---|---|
 | Cloud SQL (Postgres) | Transactional store: append-only event log, state machine, parcels, documents, flags, coordinates |
 | Local Postgres | Schema-identical fallback copy, toggled via `DB_MODE` env var |
-| Cloud Storage | Raw HTML/PDF retention for re-parsing without re-scraping |
-| BigQuery | Analytical layer: dbt marts, price/location/flag analysis |
-| Airflow (CeleryExecutor, local) | Scheduled scrape, geocode, sync, dbt run, daily pipeline (dev/manual) |
+| Cloud Storage | Raw HTML/PDF retention; also stores versioned price model artifacts |
+| BigQuery | Analytical layer: dbt marts, price/location/flag analysis, model training run log |
+| scikit-learn | Price-ratio estimation model, retrains automatically as data accumulates |
+| Airflow (CeleryExecutor, local) | Scheduled scrape, geocode, sync, dbt, model training (dev/manual) |
 | Cloud Run Jobs + Cloud Scheduler | Same pipeline, cloud-native, unattended, independent of local machine |
-| dbt | Transformation layer (staging → 6 marts) |
-| Terraform | Infrastructure as code for core GCP resources |
-| Streamlit (Cloud Run + local) | Multi-page dashboard: filtering, map, per-object detail, case/BLNr browser |
+| dbt | Transformation layer (staging → 6 marts), with real schema tests (not_null/unique) |
+| Terraform | Infrastructure as code — full coverage of live infrastructure (service accounts, Cloud Run, Scheduler, Secret Manager, monitoring, Dataplex), verified against actual GCP state, not just core resources |
+| Streamlit (Cloud Run + local) | Multi-page dashboard: filtering, map, per-object detail, case/BLNr browser, embedded Looker Studio |
 | Looker Studio | Analytical reporting on top of BigQuery marts |
-| Secret Manager | Credential storage for Cloud Run services |
+| Secret Manager | Credential storage, no secrets in code or CLI args |
+| Cloud Monitoring | Pipeline failure alerting + dashboard uptime monitoring, both tested end-to-end |
+| GitHub Actions | CI: pytest + dbt tests on every push/PR (no auto-deploy, deliberately) |
+| Dataplex | Cataloging across both BigQuery datasets |
 
 **Deferred (v1.5/v2):** LLM-based flag classification (better negation handling 
-than keyword matching), RAG over Langgutachten PDFs, GA4 usage tracking, 
-BLNr-category-aware object linking (see DECISIONS.md open items).
+than keyword matching), RAG over Langgutachten PDFs, price model results surfaced 
+in Streamlit (built and running, not yet user-facing), mit/nach Überbot price 
+training data (requires tracking overbid-window resolution).
 
 **Explicitly out of scope:** cost and time-to-fix estimation for flagged defects, 
-true embedding-based similarity search between listings (basic filter-based 
-similarity by category, region, and size is in scope).
+true embedding-based similarity search between listings, auto-deploy-on-merge CI/CD 
+(deliberate scope decision given solo-developer scale, see DECISIONS.md).
 
 Full reasoning for each choice, including tools deliberately rejected, in 
 [DECISIONS.md](/docs/DECISIONS.md).
@@ -80,6 +87,14 @@ marts — `mart_current_objects`, `mart_price_history`, `mart_market_by_region`,
 
 Full schema in [SCHEMA.md](/docs/SCHEMA.md).
 
+## Price estimation
+`train_price_model.py` runs as the final pipeline stage, predicting 
+`meistbot_to_schaetzwert_ratio` (not raw price) via a GradientBoostingRegressor. 
+Deliberately refuses to train below 20 rows to avoid overfitting noise; every run, 
+including skips, is logged to `model_training_runs` with its reasoning. Fully 
+automated: no manual retraining step, improves on its own as real auction outcomes 
+accumulate in `mart_price_history`. Not yet surfaced in Streamlit (see Deferred).
+
 ## Setup/run instructions
 
 **Local development:**
@@ -102,15 +117,29 @@ docker compose up -d --build
 ```bash
 cd dbt/edikte_dbt
 dbt run
+dbt test
+```
+
+**Tests:**
+```bash
+uv run pytest tests/ -v
 ```
 
 **Cloud deployment** (Streamlit + pipeline job): see `deploy/streamlit/Dockerfile` 
 and `deploy/pipeline/Dockerfile`, build/push/deploy commands documented inline 
 in DECISIONS.md's relevant ADRs.
 
+**Infrastructure:**
+```bash
+cd infra
+terraform init
+terraform plan   # should report no changes if state matches reality
+```
+
 Secrets required (never committed): `.env`, `infra/terraform.tfvars`, 
 `airflow-key.json`, `airflow/.env`, `dbt/edikte_dbt/profiles_docker.yml` / 
-`profiles_cloudrun.yml`.
+`profiles_cloudrun.yml` / `profiles_ci.yml`. CI additionally requires a 
+`GCP_SA_KEY` GitHub repository secret (github-actions-deployer service account).
 
 ## Known limitations
 - Final sale price for "Zuschlag mit/nach Überbot" outcomes is provisional 

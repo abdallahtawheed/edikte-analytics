@@ -1413,7 +1413,57 @@
       "command": "cd ..",
       "timestamp": 1787130399256,
       "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "git add -A",
+      "timestamp": 1787130403274,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git commit -m \"added missing permissions for testing\"",
+      "timestamp": 1787130418826,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git push",
+      "timestamp": 1787130424328,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd dbt/edikte_dbt",
+      "timestamp": 1787134530266,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "dbt run --select mart_market_by_region",
+      "timestamp": 1787134678198,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "cd ../..",
+      "timestamp": 1787137099635,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "uv run streamlit_run streamlit_app.py",
+      "timestamp": 1787137109421,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "uv run streamlit run streamlit_app.py",
+      "timestamp": 1787137205491,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "docker build -f deploy/streamlit/Dockerfile -t gcr.io/edikte-analytics-2026/streamlit-app .\ndocker push gcr.io/edikte-analytics-2026/streamlit-app\ngcloud run deploy edikte-analytics-dashboard \\\n  --image gcr.io/edikte-analytics-2026/streamlit-app \\\n  --service-account streamlit-runner@edikte-analytics-2026.iam.gserviceaccount.com \\\n  --region europe-west3 \\\n  --allow-unauthenticated \\\n  --set-secrets DB_PASSWORD=db-password:latest",
+      "timestamp": 1787137239186,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "curl -I $(gcloud run services describe edikte-analytics-dashboard --region europe-west3 --format=\"value(status.url)\")",
+      "timestamp": 1787137247762,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
     }
   ],
-  "lastUpdated": 1787130399256
+  "lastUpdated": 1787137247762
 }
