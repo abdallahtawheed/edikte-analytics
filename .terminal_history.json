@@ -1378,7 +1378,12 @@
       "command": "git add -A",
       "timestamp": 1787129465516,
       "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "git add -A\ngit commit -m \"Fix dbt profile filename in CI, remove unused deploy.yml draft workflow\"\ngit push",
+      "timestamp": 1787129777086,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
     }
   ],
-  "lastUpdated": 1787129465516
+  "lastUpdated": 1787129777086
 }
