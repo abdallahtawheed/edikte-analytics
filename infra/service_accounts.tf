@@ -12,3 +12,26 @@ resource "google_service_account" "airflow_runner" {
   account_id   = "airflow-runner"
   display_name = "Airflow pipeline runner"
 }
+
+resource "google_service_account" "github_actions_deployer" {
+  account_id   = "github-actions-deployer"
+  display_name = "GitHub Actions CI/CD"
+}
+
+resource "google_project_iam_member" "github_actions_run_admin" {
+  project = "edikte-analytics-2026"
+  role    = "roles/run.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
+}
+
+resource "google_project_iam_member" "github_actions_sa_user" {
+  project = "edikte-analytics-2026"
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
+}
+
+resource "google_project_iam_member" "github_actions_storage_admin" {
+  project = "edikte-analytics-2026"
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
+}

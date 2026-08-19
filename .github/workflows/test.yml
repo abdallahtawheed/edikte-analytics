@@ -1,0 +1,30 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - name: Install dependencies
+        run: uv sync
+      - name: Run pytest
+        run: uv run pytest tests/ -v
+
+  dbt-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dbt
+        run: pip install dbt-bigquery
+      - name: Run dbt tests
+        working-directory: dbt/edikte_dbt
+        run: dbt test --profiles-dir .
+        env:
+          GCP_SA_KEY_JSON: ${{ secrets.GCP_SA_KEY }}

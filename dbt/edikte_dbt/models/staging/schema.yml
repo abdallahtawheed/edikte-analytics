@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_listing_snapshots
+    columns:
+      - name: snapshot_id
+        tests:
+          - unique
+          - not_null
+      - name: aktenzeichen
+        tests:
+          - not_null
+      - name: source_url
+        tests:
+          - not_null:
+              config:
+                where: "scraped_at > '2026-08-10'"

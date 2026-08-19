@@ -4,6 +4,7 @@ import hashlib
 from urllib.parse import urljoin
 import json
 import re
+import math
 
 MEISTBOT_PATTERN = re.compile(r"um das Meistbot von\s*([\d.,]+)\s*EUR\s*zugeschlagen")
 
@@ -29,7 +30,11 @@ DOCUMENT_LABELS = {"Kurzgutachten", "Langgutachten", "Lageplan", "Grundriss(e)",
 
 def parse_de_number(value: str | None) -> float | None:
     """Convert German-formatted numbers like '101.000,00 EUR' or '55,26 m²' to float."""
-    if not value:
+    if value is None:
+        return None
+    if isinstance(value, float) and math.isnan(value):
+        return None
+    if not isinstance(value, str):
         return None
     # Strip everything except digits, comma, period, minus sign
     cleaned = re.sub(r"[^\d,.\-]", "", value)

@@ -1239,7 +1239,141 @@
       "command": "terraform plan",
       "timestamp": 1787115649564,
       "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "git add --all",
+      "timestamp": 1787115673681,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "git status",
+      "timestamp": 1787115677126,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "git commit -m\"\n> Updated Terraform to match current infrastructure\n> \"",
+      "timestamp": 1787115713277,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "git push",
+      "timestamp": 1787115717919,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "gcloud iam service-accounts create github-actions-deployer \\\n  --display-name=\"GitHub Actions CI/CD\"\ngcloud projects add-iam-policy-binding edikte-analytics-2026 \\\n  --member=\"serviceAccount:github-actions-deployer@edikte-analytics-2026.iam.gserviceaccount.com\" \\\n  --role=\"roles/run.admin\"\ngcloud projects add-iam-policy-binding edikte-analytics-2026 \\\n  --member=\"serviceAccount:github-actions-deployer@edikte-analytics-2026.iam.gserviceaccount.com\" \\\n  --role=\"roles/iam.serviceAccountUser\"\ngcloud projects add-iam-policy-binding edikte-analytics-2026 \\\n  --member=\"serviceAccount:github-actions-deployer@edikte-analytics-2026.iam.gserviceaccount.com\" \\\n  --role=\"roles/storage.admin\"",
+      "timestamp": 1787115788847,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "gcloud iam service-accounts keys create github-actions-key.json \\\n  --iam-account=github-actions-deployer@edikte-analytics-2026.iam.gserviceaccount.com",
+      "timestamp": 1787115813163,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "cat github-actions-key.json",
+      "timestamp": 1787115830349,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "rm github-actions-key.json",
+      "timestamp": 1787115910536,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "TDmq0TBviAbFdp\\nhsB4VFpna8ebkgxE9OhEb7pP2aOSCGeWP2PR52cskMljMx+gA1zbhkztIJ6WRSAF\\nSjt5i3H6zLb7hKcuUCndM/Tm\\n-----END PRIVATE KEY-----\\n\",\n  \"client_email\": \"github-actions-deployer@edikte-analytics-2026.iam.gserviceaccount.com\",\n  \"client_id\": \"104613610857746732241\",\n  \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",\n  \"token_uri\": \"https://oauth2.googleapis.com/token\",\n  \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",\n  \"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/github-actions-deployer%40edikte-analytics-2026.iam.gserviceaccount.com\",\n  \"universe_domain\": \"googleapis.com\"\n}\n(ediktsdatei-scraper) dev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics/infra$ rm github-actions-key.json\n(ediktsdatei-scraper) dev-dream-pc@dev-dream-pc-System-Product-Name:~/coding_projects/edikte-analytics/infra$ terraform import google_service_account.github_actions_deployer projects/edikte-analytics-2026/serviceAccounts/github-actions-deployer@edikte-analytics-2026.iam.gserviceaccount.com",
+      "timestamp": 1787118708463,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform plan",
+      "timestamp": 1787118744880,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "terraform apply",
+      "timestamp": 1787118765222,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "cd dbt/edikte_dbt\ndbt test --select stg_listing_snapshots",
+      "timestamp": 1787118913033,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "^C",
+      "timestamp": 1787118921431,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/infra"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_9hbjbq.sh\" && rm \"/tmp/wshist_9hbjbq.sh\"; } 2>/dev/null",
+      "timestamp": 1787118928881,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787118933244
+    },
+    {
+      "command": "cd dbt/edikte_dbt\ndbt test --select stg_listing_snapshots",
+      "timestamp": 1787118947972,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "$ { source \"/tmp/wshist_yg792.sh\" && rm \"/tmp/wshist_yg792.sh\"; } 2>/dev/null",
+      "timestamp": 1787118948187,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_nzxigh.sh\" && rm \"/tmp/wshist_nzxigh.sh\"; } 2>/dev/null",
+      "timestamp": 1787118948191,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "{ source \"/tmp/wshist_oa8kc.sh\" && rm \"/tmp/wshist_oa8kc.sh\"; } 2>/dev/null",
+      "timestamp": 1787118948194,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "source /home/dev-dream-pc/coding_projects/edikte-analytics/.venv/bin/activate",
+      "timestamp": 1787118948742,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd dbt/edikte_dbt\ndbt test --select stg_listing_snapshots",
+      "timestamp": 1787118962603,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "cd ~/coding_projects/edikte-analytics\nuv run pytest tests/ -v",
+      "timestamp": 1787119086577,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "uv run pytest tests/ -v",
+      "timestamp": 1787119292597,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd ~/coding_projects/edikte-analytics",
+      "timestamp": 1787119301343,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "dbt test --select stg_listing_snapshots",
+      "timestamp": 1787119305656,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd dbt/edikte_dbt/",
+      "timestamp": 1787119313855,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "dbt test",
+      "timestamp": 1787119324772,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
     }
   ],
-  "lastUpdated": 1787115649564
+  "lastUpdated": 1787119324772
 }
