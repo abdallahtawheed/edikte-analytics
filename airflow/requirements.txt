@@ -7,3 +7,7 @@ google-cloud-bigquery
 dbt-bigquery
 jinja2>=3.1.5,<3.2.0
 click==8.2.1
+scikit-learn
+joblib
+google-cloud-storage
+pandas-gbq

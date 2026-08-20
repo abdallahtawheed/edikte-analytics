@@ -1478,7 +1478,107 @@
       "command": "dbt run --select mart_flag_summary",
       "timestamp": 1787137989079,
       "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "git add -A\ngit status",
+      "timestamp": 1787138634970,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "git commit -m \"Fix double-counting bugs in mart_market_by_region and mart_flag_summary\n\n- (Old Push)mart_market_by_region: UNION ALL of granular (ort/plz/kategorie) and\n  city-level rollup rows caused Looker Studio to sum pre-averaged values\n  when queried without filtering, producing nonsensical price-per-sqm\n  figures (e.g. Wien showing 92,789 EUR/sqm). Added is_city_rollup flag\n  to distinguish the two granularities; city rollup now uses a genuine\n  listing_count-weighted average, not a naive AVG of averages\n- mart_flag_summary: flags were counted across every historical rescrape\n  of a listing, not just its current state, causing frequently-rescraped\n  listings to appear far more flagged than reality (one Dornbirn listing\n  showed 32 flags from 16 rescrapes of 2 real, distinct issues). Restricted\n  to each object's latest snapshot only; confirmed remaining counts are\n  correct for genuine multi-object Aktenzeichen cases (verified: 8 flags\n  = 4 real objects x 2 flags each, not duplication)\n- (Old Push)Fixed Looker Studio embed URL in streamlit_app.py, was hardcoded to a\n  stale page ID showing the (still data-thin) lifecycle funnel instead\n  of the intended default page\n- (Old Push)Updated ARCHITECTURE.md and README.md to reflect all work since the\n  last docs pass: price model, full Terraform coverage, CI (pytest + dbt\n  tests via GitHub Actions), Cloud Monitoring (job failure + uptime,\n  both tested end-to-end), structured logging, backups/PITR\"",
+      "timestamp": 1787138721189,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "ull",
+      "timestamp": 1787171904663,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gcloud run jobs execute pipeline-job --region europe-west3",
+      "timestamp": 1787178246339,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "bq mk --dataset --location=europe-west3 edikte-analytics-2026:edikte_analytics_test",
+      "timestamp": 1787182198547,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "BQ_DATASET_OVERRIDE=edikte_analytics_test uv run python src/model/train_price_model.py",
+      "timestamp": 1787182944135,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "cd ../..",
+      "timestamp": 1787182949067,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/dbt/edikte_dbt"
+    },
+    {
+      "command": "BQ_DATASET_OVERRIDE=edikte_analytics_test uv run python src/model/train_price_model.py",
+      "timestamp": 1787182957671,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "grep -n \"DATASET\" src/model/train_price_model.py",
+      "timestamp": 1787183233866,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "BQ_DATASET_OVERRIDE=edikte_analytics_test uv run python src/model/train_price_model.py",
+      "timestamp": 1787183336150,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "bq rm -r -f edikte-analytics-2026:edikte_analytics_test",
+      "timestamp": 1787183701487,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gsutil rm gs://edikte-analytics-raw-docs/models/price_ratio_model_latest.joblib",
+      "timestamp": 1787183708794,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "bq mk --dataset --location=europe-west3 edikte-analytics-2026:edikte_analytics_test",
+      "timestamp": 1787183848770,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "BQ_DATASET_OVERRIDE=edikte_analytics_test MODEL_BLOB_PATH_OVERRIDE=models/test_model.joblib uv run python src/model/train_price_model.py",
+      "timestamp": 1787183913698,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "BQ_DATASET_OVERRIDE=edikte_analytics_test MODEL_BLOB_PATH_OVERRIDE=models/test_model.joblib uv run streamlit run streamlit_app.py",
+      "timestamp": 1787184079066,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "bq rm -r -f edikte-analytics-2026:edikte_analytics_test\ngsutil rm gs://edikte-analytics-raw-docs/models/test_model.joblib",
+      "timestamp": 1787186115572,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "gsutil rm gs://edikte-analytics-raw-docs/models/test_model.joblib",
+      "timestamp": 1787186119291,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "\\uv run streamlit run streamlit_app.py",
+      "timestamp": 1787186319223,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "cd airflow\ndocker compose down\ndocker compose up -d --build",
+      "timestamp": 1787186399396,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics"
+    },
+    {
+      "command": "git status",
+      "timestamp": 1787186711377,
+      "cwd": "/home/dev-dream-pc/coding_projects/edikte-analytics/airflow"
     }
   ],
-  "lastUpdated": 1787137989079
+  "lastUpdated": 1787186711377
 }

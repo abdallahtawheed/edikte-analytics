@@ -58,6 +58,11 @@ def run_geocoding():
     from scraper.run_geocoding import main
     main()
 
+def run_price_model_training():
+    import sys
+    sys.path.insert(0, "/opt/airflow/src")
+    from model.train_price_model import main as train_model_main
+    train_model_main()
 
 with DAG(
     dag_id="edikte_daily_scrape",
@@ -87,4 +92,10 @@ with DAG(
             python_callable=run_dbt,
         )
 
-    scrape_task >> geocode_task >> sync_task >> dbt_task
+    price_model_task = PythonOperator(
+        task_id="train_price_model",
+        python_callable=run_price_model_training,
+        dag=dag,
+    )
+
+    scrape_task >> geocode_task >> sync_task >> dbt_task >> price_model_task

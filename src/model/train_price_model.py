@@ -3,7 +3,7 @@ sys.path.insert(0, "src")
 
 import json
 from datetime import datetime, timezone
-
+import os
 import joblib
 import pandas as pd
 from google.cloud import bigquery, storage
@@ -15,9 +15,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
 PROJECT_ID = "edikte-analytics-2026"
-DATASET = "edikte_analytics_dbt"
+DATASET = os.environ.get("BQ_DATASET_OVERRIDE", "edikte_analytics_dbt")
 BUCKET_NAME = "edikte-analytics-raw-docs"  # reusing the existing bucket, models/ prefix
-MODEL_BLOB_PATH = "models/price_ratio_model_latest.joblib"
+MODEL_BLOB_PATH = os.environ.get("MODEL_BLOB_PATH_OVERRIDE", "models/price_ratio_model_latest.joblib")
 
 MIN_TRAINING_ROWS = 20  # below this, any model is fitting noise, not signal
 
@@ -71,13 +71,13 @@ def train_and_evaluate(df: pd.DataFrame) -> dict:
     df["plz_region"] = df["plz"].astype(str).str[0]  # first digit only, coarse region signal
     df["total_objektgroesse_m2"] = df["total_objektgroesse_m2"].fillna(df["total_objektgroesse_m2"].median())
 
-    feature_cols = ["kategorie", "total_objektgroesse_m2", "unit_count", "schaetzwert", "geringstes_gebot", "is_bundled"]
+    feature_cols = ["kategorie", "plz_region", "total_objektgroesse_m2", "unit_count", "schaetzwert", "geringstes_gebot", "is_bundled"]
     X = df[feature_cols]
     y = df["meistbot_to_schaetzwert_ratio"]
 
     pipeline = build_pipeline()
 
-    n_folds = min(5, len(df))  # can't have more folds than rows
+    n_folds = max(2, min(5, len(df)))
     cv = KFold(n_splits=n_folds, shuffle=True, random_state=42)
 
     mae_scores = -cross_val_score(pipeline, X, y, cv=cv, scoring="neg_mean_absolute_error")
@@ -137,7 +137,7 @@ def main():
     if len(df) < MIN_TRAINING_ROWS:
         reason = f"Only {len(df)} rows available, need at least {MIN_TRAINING_ROWS} to train meaningfully."
         print(f"Skipping training: {reason}")
-        log_training_run({}, model_path="", skipped=True, reason=reason)
+        log_training_run({"n_rows": len(df)}, model_path="", skipped=True, reason=reason)
         return
 
     metrics = train_and_evaluate(df)
