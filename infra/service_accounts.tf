@@ -1,49 +1,51 @@
-resource "google_service_account" "pipeline_runner" {
+module "pipeline_runner" {
+  source       = "./modules/service_account"
   account_id   = "pipeline-runner"
   display_name = "Pipeline jobs (scrape, geocode, sync, dbt)"
+  project_id   = "edikte-analytics-2026"
+  roles        = [
+    "roles/cloudsql.client",
+    "roles/bigquery.dataEditor",
+    "roles/bigquery.jobUser",
+    "roles/storage.objectAdmin",
+    "roles/run.invoker",
+  ]
 }
 
-resource "google_service_account" "streamlit_runner" {
+module "streamlit_runner" {
+  source       = "./modules/service_account"
   account_id   = "streamlit-runner"
   display_name = "Streamlit Cloud Run app"
+  project_id   = "edikte-analytics-2026"
+  roles        = ["roles/cloudsql.client"]
 }
 
-resource "google_service_account" "airflow_runner" {
+
+module "airflow_runner" {
+  source       = "./modules/service_account"
   account_id   = "airflow-runner"
   display_name = "Airflow pipeline runner"
+  project_id   = "edikte-analytics-2026"
+  roles        = [
+    "roles/cloudsql.client",
+    "roles/bigquery.dataEditor",
+    "roles/bigquery.jobUser",
+  ]
 }
 
-resource "google_service_account" "github_actions_deployer" {
+module "github_actions_deployer" {
+  source       = "./modules/service_account"
   account_id   = "github-actions-deployer"
   display_name = "GitHub Actions CI/CD"
+  project_id   = "edikte-analytics-2026"
+  roles = [
+    "roles/run.admin",
+    "roles/iam.serviceAccountUser",
+    "roles/storage.admin",
+    "roles/bigquery.jobUser",
+    "roles/bigquery.dataViewer",
+  ]
 }
 
-resource "google_project_iam_member" "github_actions_run_admin" {
-  project = "edikte-analytics-2026"
-  role    = "roles/run.admin"
-  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
-}
 
-resource "google_project_iam_member" "github_actions_sa_user" {
-  project = "edikte-analytics-2026"
-  role    = "roles/iam.serviceAccountUser"
-  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
-}
 
-resource "google_project_iam_member" "github_actions_storage_admin" {
-  project = "edikte-analytics-2026"
-  role    = "roles/storage.admin"
-  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
-}
-
-resource "google_project_iam_member" "github_actions_bq_job_user" {
-  project = "edikte-analytics-2026"
-  role    = "roles/bigquery.jobUser"
-  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
-}
-
-resource "google_project_iam_member" "github_actions_bq_data_viewer" {
-  project = "edikte-analytics-2026"
-  role    = "roles/bigquery.dataViewer"
-  member  = "serviceAccount:${google_service_account.github_actions_deployer.email}"
-}

@@ -231,4 +231,4 @@ __marimo__/
 airflow/.env
 airflow-key.json
 airflow/logs/
-*.json
+*.json.terminal_history.json
