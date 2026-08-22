@@ -17,7 +17,12 @@ module "streamlit_runner" {
   account_id   = "streamlit-runner"
   display_name = "Streamlit Cloud Run app"
   project_id   = "edikte-analytics-2026"
-  roles        = ["roles/cloudsql.client"]
+  roles = [
+    "roles/cloudsql.client",
+    "roles/bigquery.jobUser",
+    "roles/bigquery.dataViewer",
+    "roles/storage.objectViewer",
+  ]
 }
 
 
